@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Class {
   @ObjectIdColumn()
   _id: ObjectID;
 
@@ -17,13 +17,7 @@ export class User {
   id: string;
 
   @Column()
-  email: string;
-
-  @Column()
-  username: string;
-
-  @Column()
-  password: string;
+  name: string;
 
   @CreateDateColumn()
   createdAt: Date;
