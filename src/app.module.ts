@@ -18,6 +18,8 @@ import { User } from './user/user.entity';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      playground: true,
+      introspection: true
     }),
     UserModule,
   ],
