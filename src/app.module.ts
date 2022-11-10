@@ -31,11 +31,11 @@ import { AtGuard } from './common/guards';
     ClassModule,
     AuthModule,
   ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AtGuard,
-    },
-  ],
+  // providers: [
+  //   {
+  //     provide: APP_GUARD,
+  //     useClass: AtGuard,
+  //   },
+  // ],
 })
 export class AppModule {}

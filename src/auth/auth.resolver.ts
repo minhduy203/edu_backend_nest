@@ -25,21 +25,17 @@ export class AuthResolver {
   }
 
   @Mutation((_returns) => Boolean)
-  @Post('logout')
-  @HttpCode(HttpStatus.OK)
   logout(@GetCurrentUserId() userId: string) {
     return this.authService.logout(userId);
   }
 
-  @Public()
-  @UseGuards(RtGuard)
-  @Post('refresh')
-  @HttpCode(HttpStatus.OK)
-  @Mutation((_returns) => TokenType)
-  refreshTokens(
-    @GetCurrentUserId() userId: string,
-    @GetCurrentUser('refreshToken') refreshToken: string,
-  ) {
-    return this.authService.refreshTokens(userId, refreshToken);
-  }
+  // @Public()
+  // @UseGuards(RtGuard)
+  // @Mutation((_returns) => TokenType)
+  // refreshTokens(
+  //   @GetCurrentUserId() userId: string,
+  //   @GetCurrentUser('refreshToken') refreshToken: string,
+  // ) {
+  //   return this.authService.refreshTokens(userId, refreshToken);
+  // }
 }
