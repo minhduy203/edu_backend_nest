@@ -6,10 +6,6 @@ import { v4 as uuid } from 'uuid';
 import { User } from './user.entity';
 import * as argon2 from 'argon2';
 import { UpdateUserInput } from '../../type/UpdateUserInput';
-import { LoginInput } from './user.input';
-import { UserMutationResponse } from '../../type/UserMutationResponse';
-import { createToken, sendRefreshToken } from '../../utils/auth';
-import { Response } from 'express';
 
 @Injectable()
 export class UserService {
@@ -70,36 +66,5 @@ export class UserService {
     await this.userRepository.delete({ id });
 
     return true;
-  }
-
-  async login(
-    loginInput: LoginInput,
-    res: Response,
-  ): Promise<UserMutationResponse> {
-    const { email, password } = loginInput;
-    const existingUser = await this.userRepository.findOneBy({ email });
-
-    if (!existingUser) {
-      return {
-        messageError: 'User not found',
-      };
-    }
-
-    const isPasswordValid = await argon2.verify(
-      existingUser.password,
-      password,
-    );
-
-    if (!isPasswordValid) {
-      return {
-        messageError: 'Incorrect password',
-      };
-    }
-
-    sendRefreshToken(res, existingUser);
-
-    return {
-      accessToken: createToken('accessToken', existingUser),
-    };
   }
 }

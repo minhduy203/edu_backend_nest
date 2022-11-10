@@ -15,7 +15,7 @@ export class UserType {
 
   password: string;
 
-  @Field((_type) => Role)
+  @Field((_type) => Role, { nullable: true })
   role: Role;
 
   @Field({ nullable: true })
@@ -33,8 +33,8 @@ export class UserType {
   @Field({ nullable: true })
   phoneNumber: string;
 
-  @Field({ defaultValue: 0 })
-  token_version: number;
+  @Field({ nullable: true })
+  token_hash: string;
 
   @Field()
   createdAt: Date;
