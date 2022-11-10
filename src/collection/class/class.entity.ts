@@ -6,7 +6,11 @@ import {
   ObjectIdColumn,
   PrimaryColumn,
   UpdateDateColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Class {
@@ -18,6 +22,27 @@ export class Class {
 
   @Column()
   name: string;
+
+  @ManyToMany(() => User)
+  users: User[];
+
+  @ManyToOne(() => User)
+  owner: User;
+
+  @Column()
+  studentAmount: number;
+
+  @Column()
+  scoreFactor: number;
+
+  @ManyToMany(() => User)
+  coOp: User;
+
+  @ManyToMany(() => User)
+  studentsList: User;
+
+  @Column()
+  code: string;
 
   @CreateDateColumn()
   createdAt: Date;

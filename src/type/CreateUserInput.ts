@@ -9,12 +9,18 @@ export class CreateUserInput {
   @Field()
   password: string;
 
-  @Field()
+  @Field((_type) => Role)
   role: Role;
 
-  @Field()
-  firstName: string;
+  @Field({nullable: true})
+  firstName?: string;
 
-  @Field()
-  lastName: string;
+  @Field({nullable: true})
+  lastName?: string;
+
+  @Field({nullable: true})
+  address?: string;
+
+  @Field({nullable: true})
+  phoneNumber?: string;
 }

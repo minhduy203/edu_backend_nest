@@ -14,4 +14,10 @@ export class UpdateUserInput {
 
   @Field({nullable: true})
   lastName?: string;
+
+  @Field({nullable: true})
+  address?: string;
+
+  @Field({nullable: true})
+  phoneNumber?: string;
 }

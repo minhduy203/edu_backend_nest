@@ -6,8 +6,11 @@ import {
   ObjectIdColumn,
   PrimaryColumn,
   UpdateDateColumn,
+  OneToMany,
+  ManyToMany,
 } from 'typeorm';
 import { Role } from '../../type/Role';
+import { Class } from '../class/class.entity';
 
 @Entity()
 export class User {
@@ -17,7 +20,7 @@ export class User {
   @PrimaryColumn()
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -35,6 +38,18 @@ export class User {
 
   @Column()
   lastName: string;
+
+  @ManyToMany(() => Class)
+  classes: Class[];
+
+  @Column()
+  address: string;
+
+  @Column()
+  phoneNumber: string;
+
+  @Column({ default: 0 })
+  token_version: number;
 
   @CreateDateColumn()
   createdAt: Date;

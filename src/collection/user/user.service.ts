@@ -6,6 +6,10 @@ import { v4 as uuid } from 'uuid';
 import { User } from './user.entity';
 import * as argon2 from 'argon2';
 import { UpdateUserInput } from '../../type/UpdateUserInput';
+import { LoginInput } from './user.input';
+import { UserMutationResponse } from '../../type/UserMutationResponse';
+import { createToken, sendRefreshToken } from '../../utils/auth';
+import { Response } from 'express';
 
 @Injectable()
 export class UserService {
@@ -22,7 +26,8 @@ export class UserService {
   }
 
   async createUser(createUserInput: CreateUserInput): Promise<User> {
-    const { email, password, role, firstName, lastName } = createUserInput;
+    const { email, password, role, firstName, lastName, address, phoneNumber } =
+      createUserInput;
     const hashedPassword = await argon2.hash(password);
     const user = this.userRepository.create({
       id: uuid(),
@@ -31,33 +36,70 @@ export class UserService {
       role,
       firstName,
       lastName,
+      address,
+      phoneNumber,
     });
 
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+    return user;
   }
 
   async updateUser(
     updateUserInput: UpdateUserInput,
     id: string,
   ): Promise<User> {
-    const { email, role, firstName, lastName } = updateUserInput;
-    const post = await this.userRepository.findOneBy({ id });
+    const { email, role, firstName, lastName, address, phoneNumber } =
+      updateUserInput;
+    const user = await this.userRepository.findOneBy({ id });
 
-    post.email = email;
-    post.role = role;
-    post.firstName = firstName;
-    post.lastName = lastName;
+    user.email = email;
+    user.role = role;
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.address = address;
+    user.phoneNumber = phoneNumber;
 
-    return this.userRepository.save(post);
+    return this.userRepository.save(user);
   }
 
   async deleteUser(id: string): Promise<boolean> {
-    const post = await this.userRepository.findOneBy({ id });
-    if (!post) {
+    const existingUser = await this.userRepository.findOneBy({ id });
+    if (!existingUser) {
       return false;
     }
     await this.userRepository.delete({ id });
 
     return true;
+  }
+
+  async login(
+    loginInput: LoginInput,
+    res: Response,
+  ): Promise<UserMutationResponse> {
+    const { email, password } = loginInput;
+    const existingUser = await this.userRepository.findOneBy({ email });
+
+    if (!existingUser) {
+      return {
+        messageError: 'User not found',
+      };
+    }
+
+    const isPasswordValid = await argon2.verify(
+      existingUser.password,
+      password,
+    );
+
+    if (!isPasswordValid) {
+      return {
+        messageError: 'Incorrect password',
+      };
+    }
+
+    sendRefreshToken(res, existingUser);
+
+    return {
+      accessToken: createToken('accessToken', existingUser),
+    };
   }
 }
