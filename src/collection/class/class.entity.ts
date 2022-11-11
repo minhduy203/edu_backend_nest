@@ -23,9 +23,6 @@ export class Class {
   @Column()
   name: string;
 
-  @ManyToMany(() => User)
-  users: User[];
-
   @ManyToOne(() => User)
   owner: User;
 
@@ -35,11 +32,11 @@ export class Class {
   @Column()
   scoreFactor: number;
 
-  @ManyToMany(() => User)
-  coOp: User;
+  @Column()
+  teachers: string[];
 
-  @ManyToMany(() => User)
-  studentsList: User;
+  @Column()
+  students: string[];
 
   @Column()
   code: string;

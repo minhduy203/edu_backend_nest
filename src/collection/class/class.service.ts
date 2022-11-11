@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { User } from '../user/user.entity';
 import { Class } from './class.entity';
 import { CreateClassInput, UpdateClassInput } from './class.input';
 
@@ -9,6 +10,7 @@ import { CreateClassInput, UpdateClassInput } from './class.input';
 export class ClassService {
   constructor(
     @InjectRepository(Class) private classRepository: Repository<Class>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async getAllClasses(): Promise<Class[]> {
     return this.classRepository.find();
@@ -19,13 +21,16 @@ export class ClassService {
   }
 
   async createClass(createClassInput: CreateClassInput): Promise<Class> {
-    const { name, studentAmount, scoreFactor } = createClassInput;
+    const { name, studentAmount, scoreFactor, students, teachers } =
+      createClassInput;
     const classRoom = this.classRepository.create({
       id: uuid(),
       name,
       studentAmount,
       scoreFactor,
       code: uuid(),
+      students,
+      teachers,
     });
 
     await this.classRepository.save(classRoom);
@@ -54,5 +59,45 @@ export class ClassService {
     await this.classRepository.delete({ id });
 
     return true;
+  }
+
+  async assignStudentsToClass(
+    classId: string,
+    studentIds: string[],
+  ): Promise<Class> {
+    const classRoom = await this.classRepository.findOneBy({ id: classId });
+
+    classRoom.students = [...classRoom.students, ...studentIds];
+
+    for (const userId of studentIds) {
+      const user = await this.userRepository.findOneBy({ id: userId });
+      user.classes.push(classId);
+      this.userRepository.save(user);
+    }
+
+    // const userList = await this.userRepository.find({
+    //   where: {
+    //     id: {
+    //       $in: studentIds,
+    //     } as any,
+    //   },
+    // });
+
+    // for (const user of userList) {
+    //   user.classes=[...user.classes, classId];
+    //   this.userRepository.save(user);
+    // }
+
+    return this.classRepository.save(classRoom);
+  }
+
+  async assignTeachersToClass(
+    classId: string,
+    teachersIds: string[],
+  ): Promise<Class> {
+    const classRoom = await this.classRepository.findOneBy({ id: classId });
+
+    classRoom.teachers = [...classRoom.teachers, ...teachersIds];
+    return this.classRepository.save(classRoom);
   }
 }

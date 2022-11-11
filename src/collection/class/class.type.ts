@@ -21,11 +21,11 @@ export class ClassType {
   @Field()
   scoreFactor: number;
 
-  @Field((_type) => UserType, { nullable: true })
-  coOp: [UserType];
+  @Field((_type) => [UserType], { nullable: true })
+  teachers: string[];
 
-  @Field((_type) => UserType, { nullable: true })
-  studentsList: [UserType];
+  @Field((_type) => [UserType], { nullable: true })
+  students: string[];
 
   @Field()
   code: string;

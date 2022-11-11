@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateClassInput {
@@ -10,6 +10,12 @@ export class CreateClassInput {
 
   @Field()
   scoreFactor: number;
+
+  @Field((_type) => [ID], { defaultValue: [] })
+  students: string[];
+
+  @Field((_type) => [ID], { defaultValue: [] })
+  teachers: string[];
 }
 
 @InputType()
@@ -22,4 +28,13 @@ export class UpdateClassInput {
 
   @Field({ nullable: true })
   scoreFactor: number;
+}
+
+@InputType()
+export class AssignUserToClassInput {
+  @Field((_type) => ID)
+  classId: string;
+
+  @Field((_type) => [ID])
+  usersIds: string[];
 }

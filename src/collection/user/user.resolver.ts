@@ -1,6 +1,14 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UpdateUserInput } from '../../type/UpdateUserInput';
-import { CreateUserInput } from '../../type/CreateUserInput';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { ClassService } from '../class/class.service';
+import { User } from './user.entity';
+import { UpdateUserInput, CreateUserInput } from './user.input';
 import { UserService } from './user.service';
 import { UserType } from './user.type';
 
@@ -33,5 +41,10 @@ export class UserResolver {
   @Mutation((_returns) => Boolean)
   deleteUser(@Args('id') id: string) {
     return this.userService.deleteUser(id);
+  }
+
+  @ResolveField()
+  async classes(@Parent() user: User) {
+    return this.userService.getManyClasses(user.classes);
   }
 }

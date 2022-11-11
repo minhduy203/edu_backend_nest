@@ -24,8 +24,8 @@ export class UserType {
   @Field({ nullable: true })
   lastName: string;
 
-  @Field((_type) => ClassType, { nullable: true })
-  classes: [ClassType];
+  @Field((_type) => [ClassType], { nullable: true })
+  classes: string[];
 
   @Field({ nullable: true })
   address: string;

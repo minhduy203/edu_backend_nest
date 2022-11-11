@@ -1,12 +1,29 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UpdateClassInput } from './class.input';
-import { CreateClassInput } from './class.input';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { UserType } from '../user/user.type';
+import { Class } from './class.entity';
+import {
+  AssignUserToClassInput,
+  CreateClassInput,
+  UpdateClassInput,
+} from './class.input';
 import { ClassService } from './class.service';
 import { ClassType } from './class.type';
 
 @Resolver((_of) => ClassType)
 export class ClassResolver {
-  constructor(private classService: ClassService) {}
+  constructor(
+    private classService: ClassService,
+    private userService: UserService,
+  ) {}
 
   @Query((_returns) => [ClassType])
   getAllClasses() {
@@ -34,4 +51,34 @@ export class ClassResolver {
   deleteClass(@Args('id') id: string) {
     return this.classService.deleteClass(id);
   }
+
+  @Mutation((_returns) => ClassType)
+  assignStudentToClass(
+    @Args('assignStudentToClassInput')
+    assignStudentToClassInput: AssignUserToClassInput,
+  ) {
+    const { classId, usersIds } = assignStudentToClassInput;
+    return this.classService.assignStudentsToClass(classId, usersIds);
+  }
+
+  @Mutation((_returns) => ClassType)
+  assignTeacherToClass(
+    @Args('assignTeacherToClassInput')
+    assignTeacherToClassInput: AssignUserToClassInput,
+  ) {
+    const { classId, usersIds } = assignTeacherToClassInput;
+    return this.classService.assignTeachersToClass(classId, usersIds);
+  }
+
+  @ResolveField()
+  async students(@Parent() classRoom: Class) {
+    return this.userService.getManyUsers(classRoom.students);
+  }
+
+  @ResolveField()
+  async teachers(@Parent() classRoom: Class) {
+    return this.userService.getManyUsers(classRoom.teachers);
+  }
+
+  
 }

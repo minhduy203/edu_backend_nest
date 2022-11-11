@@ -39,8 +39,8 @@ export class User {
   @Column()
   lastName: string;
 
-  @ManyToMany(() => Class)
-  classes: Class[];
+  @Column()
+  classes: string[];
 
   @Column()
   address: string;
