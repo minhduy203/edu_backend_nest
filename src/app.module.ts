@@ -26,6 +26,10 @@ import { AtGuard } from './common/guards';
       playground: true,
       introspection: true,
       cache: 'bounded',
+      cors: {
+        Credential: true,
+        origin: true,
+      },
     }),
     UserModule,
     ClassModule,
