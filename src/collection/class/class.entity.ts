@@ -23,8 +23,8 @@ export class Class {
   @Column()
   name: string;
 
-  @ManyToOne(() => User)
-  owner: User;
+  @Column()
+  owner: string;
 
   @Column()
   studentAmount: number;

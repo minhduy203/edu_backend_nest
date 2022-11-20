@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Tokens } from '../type/Tokens';
-import { JwtPayload } from '../type/JwtPayload';
+import { Tokens } from '../type';
+import { JwtPayload } from '../type';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../collection/user/user.entity';
 import { IsNull, Not, Repository } from 'typeorm';

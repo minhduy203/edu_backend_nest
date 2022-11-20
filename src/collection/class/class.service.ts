@@ -20,12 +20,13 @@ export class ClassService {
     return this.classRepository.findOneBy({ id });
   }
 
-  async createClass(createClassInput: CreateClassInput): Promise<Class> {
+  async createClass(createClassInput: CreateClassInput, owner: string): Promise<Class> {
     const { name, studentAmount, scoreFactor, students, teachers } =
       createClassInput;
     const classRoom = this.classRepository.create({
       id: uuid(),
       name,
+      owner,
       studentAmount,
       scoreFactor,
       code: uuid(),

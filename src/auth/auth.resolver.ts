@@ -1,12 +1,9 @@
-import { HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { LoginInput, RegisterInput } from './auth.input';
 import { AuthService } from './auth.service';
 import { TokenType } from './auth.type';
-import { Request } from 'express';
-import { GetCurrentUser, GetCurrentUserId, Public } from '../common/decorators';
-import { AtGuard, RtGuard } from '../common/guards';
+import { GetCurrentUser, Public } from '../common/decorators';
+import { User } from '../collection/user/user.entity';
 
 @Resolver()
 export class AuthResolver {
@@ -25,8 +22,8 @@ export class AuthResolver {
   }
 
   @Mutation((_returns) => Boolean)
-  logout(@GetCurrentUserId() userId: string) {
-    return this.authService.logout(userId);
+  logout(@GetCurrentUser() user: User) {
+    return this.authService.logout(user.id);
   }
 
   // @Public()

@@ -90,8 +90,6 @@ export class UserService {
         } as any,
       },
     });
-    console.log(classList);
-    
 
     return classList;
   }
