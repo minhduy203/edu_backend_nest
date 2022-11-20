@@ -1,10 +1,9 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { JwtPayloadWithRt } from '../../type/JwtPayloadWithRt';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 export const GetCurrentUser = createParamDecorator(
-  (data: keyof JwtPayloadWithRt | undefined, context: ExecutionContext) => {
-    const request = context.switchToHttp().getRequest();
-    if (!data) return request.user;
-    return request.user[data];
+  (data: unknown, context: ExecutionContext) => {
+    const ctx = GqlExecutionContext.create(context);
+    return ctx.getContext().req.user;
   },
 );

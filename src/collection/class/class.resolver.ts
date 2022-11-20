@@ -6,6 +6,8 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { JwtPayload } from '../../type';
+import { GetCurrentUser } from '../../common/decorators';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { UserType } from '../user/user.type';
@@ -35,8 +37,11 @@ export class ClassResolver {
   }
 
   @Mutation((_returns) => ClassType)
-  createClass(@Args('createClassInput') createClassInput: CreateClassInput) {
-    return this.classService.createClass(createClassInput);
+  createClass(
+    @GetCurrentUser() user: JwtPayload,
+    @Args('createClassInput') createClassInput: CreateClassInput,
+  ) {
+    return this.classService.createClass(createClassInput, user.sub);
   }
 
   @Mutation((_returns) => ClassType)
@@ -71,6 +76,11 @@ export class ClassResolver {
   }
 
   @ResolveField()
+  async owner(@Parent() classRoom: Class) {
+    return this.userService.getUserById(classRoom.owner);
+  }
+
+  @ResolveField()
   async students(@Parent() classRoom: Class) {
     return this.userService.getManyUsers(classRoom.students);
   }
@@ -79,6 +89,4 @@ export class ClassResolver {
   async teachers(@Parent() classRoom: Class) {
     return this.userService.getManyUsers(classRoom.teachers);
   }
-
-  
 }

@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { Role } from '../../type/Role';
+import { Role } from '../../type';
 
 @InputType()
 export class CreateUserInput {

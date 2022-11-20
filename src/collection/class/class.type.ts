@@ -13,7 +13,7 @@ export class ClassType {
   name: string;
 
   @Field((_type) => UserType)
-  owner: UserType;
+  owner: string;
 
   @Field()
   studentAmount: number;

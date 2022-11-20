@@ -8,7 +8,7 @@ import { User } from './collection/user/user.entity';
 import { ClassModule } from './collection/class/class.module';
 import { Class } from './collection/class/class.entity';
 import { AuthModule } from './auth/auth.module';
-import { AtGuard } from './common/guards';
+import { GqlGuard } from './common/guards';
 
 @Module({
   imports: [
@@ -35,11 +35,11 @@ import { AtGuard } from './common/guards';
     ClassModule,
     AuthModule,
   ],
-  // providers: [
-  //   {
-  //     provide: APP_GUARD,
-  //     useClass: AtGuard,
-  //   },
-  // ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: GqlGuard,
+    },
+  ],
 })
 export class AppModule {}
