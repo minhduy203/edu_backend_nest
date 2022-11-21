@@ -1,4 +1,4 @@
-import { Headers, Req, Request } from '@nestjs/common';
+import { Headers, Req, Request, Res, Response } from '@nestjs/common';
 import {
   Args,
   Context,
@@ -12,7 +12,7 @@ import { User } from '../collection/user/user.entity';
 import { GetCurrentUser, GetRequest, Public } from '../common/decorators';
 import { LoginInput, RegisterInput } from './auth.input';
 import { AuthService } from './auth.service';
-import { TokenType } from './auth.type';
+import { TokenAndUser, TokenType } from './auth.type';
 
 @Resolver()
 export class AuthResolver {
@@ -30,9 +30,26 @@ export class AuthResolver {
   }
 
   @Public()
-  @Mutation((_returns) => TokenType)
-  login(@Args('loginInput') loginInput: LoginInput) {
-    return this.authService.login(loginInput);
+  @Mutation((_returns) => TokenAndUser)
+  async login(@Args('loginInput') loginInput: LoginInput, @Context() context) {
+    const { accessToken, refreshToken } = await this.authService.login(
+      loginInput,
+    );
+
+    const info = await this.authService.getMeByEmail(loginInput?.email);
+
+    context.res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      path: '/refresh_token',
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      user: info,
+    };
   }
 
   @Mutation((_returns) => Boolean)

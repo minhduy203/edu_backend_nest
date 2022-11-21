@@ -35,9 +35,11 @@ import { ConfigModule } from '@nestjs/config';
       //   origin: true,
       // },
       cors: {
-        origin: 'http://localhost:3000',
+        // origin: 'http://localhost:3000',
+        origin: true,
         credentials: true,
       },
+      context: ({ req, res }) => ({ req, res }),
     }),
     UserModule,
     ClassModule,

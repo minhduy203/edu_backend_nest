@@ -16,6 +16,11 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  async getMeByEmail(email): Promise<User> {
+    const info = await this.userRepository.findOneBy({ email });
+    return info;
+  }
+
   async me(user): Promise<User> {
     const { sub } = user;
     const info = await this.userRepository.findOneBy({ id: sub });
