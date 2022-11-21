@@ -9,9 +9,13 @@ import { ClassModule } from './collection/class/class.module';
 import { Class } from './collection/class/class.entity';
 import { AuthModule } from './auth/auth.module';
 import { GqlGuard } from './common/guards';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
     TypeOrmModule.forRoot({
       type: 'mongodb',
       url: `mongodb+srv://edu_admin:TsxsDUtDhgZPkEJA@edu.di1crza.mongodb.net/?retryWrites=true&w=majority`,
@@ -26,9 +30,13 @@ import { GqlGuard } from './common/guards';
       playground: true,
       introspection: true,
       cache: 'bounded',
+      // cors: {
+      //   credential: true,
+      //   origin: true,
+      // },
       cors: {
-        Credential: true,
-        origin: true,
+        origin: 'http://localhost:3000',
+        credentials: true,
       },
     }),
     UserModule,

@@ -31,6 +31,7 @@ export class ClassResolver {
   getAllClasses() {
     return this.classService.getAllClasses();
   }
+
   @Query((_returns) => ClassType)
   getClassById(@Args('id') id: string) {
     return this.classService.getClassById(id);

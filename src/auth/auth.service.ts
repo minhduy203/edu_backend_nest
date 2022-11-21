@@ -16,6 +16,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  async me(user): Promise<User> {
+    const { sub } = user;
+    const info = await this.userRepository.findOneBy({ id: sub });
+    return info;
+  }
+
   async register(registerInput: RegisterInput): Promise<Tokens> {
     const { email, password } = registerInput;
     const hashedPassword = await argon2.hash(password);
@@ -74,6 +80,8 @@ export class AuthService {
 
     return tokens;
   }
+
+  // async refreshTokens()
 
   async updateRtHash(userId: string, rt: string): Promise<void> {
     const hash = await argon2.hash(rt);

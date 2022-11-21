@@ -1,13 +1,27 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Headers, Req, Request } from '@nestjs/common';
+import {
+  Args,
+  Context,
+  GraphQLExecutionContext,
+  Mutation,
+  Query,
+  Resolver,
+} from '@nestjs/graphql';
+import { UserType } from 'src/collection/user/user.type';
+import { User } from '../collection/user/user.entity';
+import { GetCurrentUser, GetRequest, Public } from '../common/decorators';
 import { LoginInput, RegisterInput } from './auth.input';
 import { AuthService } from './auth.service';
 import { TokenType } from './auth.type';
-import { GetCurrentUser, Public } from '../common/decorators';
-import { User } from '../collection/user/user.entity';
 
 @Resolver()
 export class AuthResolver {
   constructor(private authService: AuthService) {}
+
+  @Query((_returns) => UserType)
+  me(@GetCurrentUser() user: User) {
+    return this.authService.me(user);
+  }
 
   @Public()
   @Mutation((_returns) => TokenType)
@@ -24,6 +38,17 @@ export class AuthResolver {
   @Mutation((_returns) => Boolean)
   logout(@GetCurrentUser() user: User) {
     return this.authService.logout(user.id);
+  }
+
+  @Public()
+  @Query((_retuns) => TokenType)
+  refreshToken(@GetRequest() req) {
+    // const { status } = res;
+    console.log('context', req.headers.authorization);
+    return {
+      accessToken: 'Asdsad',
+      refreshToken: 'csacas',
+    };
   }
 
   // @Public()
