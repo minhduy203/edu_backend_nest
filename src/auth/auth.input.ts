@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { Role } from 'src/type';
 
 @InputType()
 export class RegisterInput {
@@ -7,6 +8,12 @@ export class RegisterInput {
 
   @Field()
   password: string;
+
+  @Field()
+  username: string;
+
+  @Field()
+  role: Role
 }
 
 @InputType()

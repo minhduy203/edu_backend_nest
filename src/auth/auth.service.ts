@@ -27,21 +27,29 @@ export class AuthService {
     return info;
   }
 
-  async register(registerInput: RegisterInput): Promise<Tokens> {
-    const { email, password } = registerInput;
+  async register(registerInput: RegisterInput): Promise<User> {
+    const { email, password, username, role } = registerInput;
+    const firstName = username.split(' ').slice(0, -1).join(' ');
+    const lastName = username.split(' ').slice(-1).join(' ');
+
+    if (!email || !password || !username) {
+      throw new Error('Require email and password');
+    }
+
     const hashedPassword = await argon2.hash(password);
     const user = this.userRepository.create({
       id: uuid(),
+      firstName,
+      lastName,
+      role,
       email,
       password: hashedPassword,
+      token_version: 0,
     });
 
     await this.userRepository.save(user);
 
-    const tokens = await this.getTokens(user.id, user.email);
-    await this.updateRtHash(user.id, tokens.refreshToken);
-
-    return tokens;
+    return user;
   }
 
   async login(loginInput: LoginInput): Promise<Tokens> {
@@ -53,49 +61,59 @@ export class AuthService {
     const passwordMatches = await argon2.verify(user.password, password);
     if (!passwordMatches) throw new ForbiddenException('Access Denied');
 
-    const tokens = await this.getTokens(user.id, user.email);
-    await this.updateRtHash(user.id, tokens.refreshToken);
+    const tokens = await this.getTokens(
+      user.id,
+      user.email,
+      user.token_version,
+    );
+    // await this.updateRtHash(user.id, tokens.refreshToken);
 
     return tokens;
   }
 
   async logout(userId: string): Promise<boolean> {
-    const user = await this.userRepository.findOne({
-      where: {
-        id: userId,
-        token_hash: Not(IsNull()),
-      },
+    const user = await this.userRepository.findOneBy({
+      id: userId,
     });
 
-    user.token_hash = null;
+    user.token_version = 0;
 
+    await this.userRepository.save(user);
     return true;
   }
 
   async refreshTokens(userId: string, rt: string): Promise<Tokens> {
     const user = await this.userRepository.findOneBy({ id: userId });
-    if (!user || !user.token_hash)
+    if (!user || !user.token_version)
       throw new ForbiddenException('Access Denied');
 
-    const rtMatches = await argon2.verify(user.token_hash, rt);
-    if (!rtMatches) throw new ForbiddenException('Access Denied');
+    // const rtMatches = await argon2.verify(user.token_hash, rt);
+    // if (!rtMatches) throw new ForbiddenException('Access Denied');
 
-    const tokens = await this.getTokens(user.id, user.email);
-    await this.updateRtHash(user.id, tokens.refreshToken);
+    const tokens = await this.getTokens(
+      user.id,
+      user.email,
+      user.token_version,
+    );
+    // await this.updateRtHash(user.id, tokens.refreshToken);
 
     return tokens;
   }
 
-  // async refreshTokens()
+  async updateTokenVersion(userId: string): Promise<void> {
+    const user = await this.userRepository.findOneBy({ id: userId });
 
-  async updateRtHash(userId: string, rt: string): Promise<void> {
-    const hash = await argon2.hash(rt);
-    // const user = await this.userRepository.findOneBy({ id: userId });
-
-    await this.userRepository.update({ id: userId }, { token_hash: hash });
+    await this.userRepository.update(
+      { id: userId },
+      { token_version: ++user.token_version },
+    );
   }
 
-  async getTokens(userId: string, email: string): Promise<Tokens> {
+  async getTokens(
+    userId: string,
+    email: string,
+    tokenVersion?: number,
+  ): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
       sub: userId,
       email: email,
@@ -106,10 +124,13 @@ export class AuthService {
         secret: 'AT_SECRET',
         expiresIn: '15m',
       }),
-      this.jwtService.signAsync(jwtPayload, {
-        secret: 'RT_SECRET',
-        expiresIn: '7d',
-      }),
+      this.jwtService.signAsync(
+        { ...jwtPayload, token_version: tokenVersion },
+        {
+          secret: 'RT_SECRET',
+          expiresIn: '7d',
+        },
+      ),
     ]);
 
     return {

@@ -48,8 +48,8 @@ export class User {
   @Column()
   phoneNumber: string;
 
-  @Column()
-  token_hash: string;
+  @Column({default: 0})
+  token_version: number;
 
   @CreateDateColumn()
   createdAt: Date;
