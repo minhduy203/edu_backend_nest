@@ -33,8 +33,8 @@ export class UserType {
   @Field({ nullable: true })
   phoneNumber: string;
 
-  @Field({ nullable: true })
-  token_hash: string;
+  @Field({ defaultValue: 0 })
+  token_version: number;
 
   @Field()
   createdAt: Date;
