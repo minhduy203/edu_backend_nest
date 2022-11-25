@@ -39,7 +39,7 @@ export class AuthResolver {
     context.res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/graphql',
     });
 
@@ -84,7 +84,7 @@ export class AuthResolver {
     context.res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/graphql',
     });
 
