@@ -10,6 +10,8 @@ import { Class } from './collection/class/class.entity';
 import { AuthModule } from './auth/auth.module';
 import { GqlGuard } from './common/guards';
 import { ConfigModule } from '@nestjs/config';
+import { TagModule } from './collection/tag/tag.module';
+import { Tag } from './collection/tag/tag.entity';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { ConfigModule } from '@nestjs/config';
       database: 'edu',
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [User, Class],
+      entities: [User, Class, Tag],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -39,6 +41,7 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     ClassModule,
     AuthModule,
+    TagModule,
   ],
   providers: [
     {
