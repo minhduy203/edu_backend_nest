@@ -24,31 +24,31 @@ export class QuestionService {
     createQuestionInput: CreateQuestionInput,
     owner: string,
   ): Promise<Question> {
-    const { question, answers, isMutiple } = createQuestionInput;
-    const data = this.questionRepository.create({
+    const { question, answers, isMutiple, correctAnswer } = createQuestionInput;
+    const data = {
       id: uuid(),
       owner,
       question,
       answers,
       isMutiple,
-    //   correctAnswer,
-    });
-
-    await this.questionRepository.save(data);
-    return data;
+      correctAnswer,
+    };
+    const result = this.questionRepository.create(data);
+    // await this.questionRepository.insert(data);
+    return result;
   }
 
   async updateQuestion(
-    UpdateQuestionInput: UpdateQuestionInput,
+    updateQuestionInput: UpdateQuestionInput,
     questionId: string,
   ): Promise<Question> {
-    const { question, answers, isMutiple } = UpdateQuestionInput;
+    const { question, answers, isMutiple, correctAnswer } = updateQuestionInput;
     const data = await this.questionRepository.findOneBy({ id: questionId });
 
     (data.question = question || data.question),
       (data.answers = answers || data.answers),
-      (data.isMutiple = isMutiple || data.isMutiple)
-    //   (data.correctAnswer =  data.correctAnswer);
+      (data.isMutiple = isMutiple || data.isMutiple),
+      (data.correctAnswer = correctAnswer || data.correctAnswer);
 
     return this.questionRepository.save(data);
   }

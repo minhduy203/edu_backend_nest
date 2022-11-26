@@ -13,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MediaModule } from './collection/media/media.module';
 import { Media } from './collection/media/media.entity';
 import { QuestionModule } from './collection/question/question.module';
+import { Question } from './collection/question/question.entity';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { QuestionModule } from './collection/question/question.module';
       database: 'edu',
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [User, Class, Media],
+      entities: [User, Class, Media, Question],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

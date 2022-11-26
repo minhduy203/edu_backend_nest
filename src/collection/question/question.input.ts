@@ -1,33 +1,40 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { Answer } from './question.entity';
-import { AnswerType } from './question.type';
 
 @InputType()
 export class CreateQuestionInput {
   @Field()
   question: string;
 
-  @Field(_type=>[String])
+  @Field((_type) => [String])
   answers: string[];
 
   @Field()
   isMutiple: boolean;
 
-//   @Field((_type) => [AnswerType])
-//   correctAnswer: AnswerType[];
+  @Field((_type) => [AnswerInput])
+  correctAnswer: AnswerInput[];
 }
 
 @InputType()
 export class UpdateQuestionInput {
-  @Field()
+  @Field({ nullable: true })
   question: string;
 
-  @Field(_type=>[String])
+  @Field((_type) => [String], { nullable: true })
   answers: string[];
 
-  @Field()
+  @Field({ nullable: true })
   isMutiple: boolean;
 
-//   @Field((_type) => [AnswerType])
-//   correctAnswer: AnswerType[];
+  @Field((_type) => [AnswerInput], { nullable: true })
+  correctAnswer: AnswerInput[];
+}
+
+@InputType()
+export class AnswerInput {
+  @Field()
+  text: string;
+
+  @Field()
+  result: boolean;
 }
