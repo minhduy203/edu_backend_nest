@@ -27,32 +27,10 @@ export class UserService {
   }
 
   async createUser(createUserInput: CreateUserInput): Promise<User> {
-    const {
-      email,
-      password,
-      role,
-      firstName,
-      lastName,
-      address,
-      phoneNumber,
-      classes,
-    } = createUserInput;
-    const hashedPassword = await argon2.hash(password);
-    const user = this.userRepository.create({
-      id: uuid(),
-      email,
-      password: hashedPassword,
-      role,
-      firstName,
-      lastName,
-      address,
-      phoneNumber,
-      classes,
-      token_version: 0,
-    });
+    const newUser = this.userRepository.create(createUserInput);
 
-    await this.userRepository.save(user);
-    return user;
+    await this.userRepository.save(newUser);
+    return newUser;
   }
 
   async updateUser(

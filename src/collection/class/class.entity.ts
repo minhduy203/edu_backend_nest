@@ -31,10 +31,10 @@ export class Class {
   @Column()
   scoreFactor: number;
 
-  @Column()
+  @Column({ default: [] })
   teachers: string[];
 
-  @Column()
+  @Column({ default: [] })
   students: string[];
 
   @Column()
