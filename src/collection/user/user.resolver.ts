@@ -6,9 +6,15 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { GetCurrentUser } from 'src/common/decorators';
+import { JwtPayload } from 'src/type';
 import { ClassService } from '../class/class.service';
 import { User } from './user.entity';
-import { UpdateUserInput, CreateUserInput } from './user.input';
+import {
+  UpdateUserInput,
+  CreateUserInput,
+  UpdateProfileInput,
+} from './user.input';
 import { UserService } from './user.service';
 import { UserType } from './user.type';
 
@@ -41,6 +47,15 @@ export class UserResolver {
   @Mutation((_returns) => Boolean)
   deleteUser(@Args('id') id: string) {
     return this.userService.deleteUser(id);
+  }
+
+  @Mutation((_returns) => UserType)
+  updateProfile(
+    @Args('updateProfileInput') updateProfileInput: UpdateProfileInput,
+    @GetCurrentUser() user: JwtPayload,
+  ) {
+    const id = user.sub;
+    return this.userService.updateProfile(id, updateProfileInput);
   }
 
   @ResolveField()

@@ -45,7 +45,7 @@ export class User {
   @Column()
   phoneNumber: string;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   token_version: number;
 
   @CreateDateColumn()

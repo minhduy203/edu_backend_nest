@@ -20,6 +20,9 @@ export class Class {
   name: string;
 
   @Column()
+  banner: string;
+
+  @Column()
   owner: string;
 
   @Column()
@@ -36,6 +39,12 @@ export class Class {
 
   @Column()
   code: string;
+
+  @Column()
+  end_date: Date;
+
+  @Column()
+  from_date: Date;
 
   @CreateDateColumn()
   createdAt: Date;

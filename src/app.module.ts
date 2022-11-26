@@ -33,12 +33,7 @@ import { QuestionModule } from './collection/question/question.module';
       playground: true,
       introspection: true,
       cache: 'bounded',
-      // cors: {
-      //   credential: true,
-      //   origin: true,
-      // },
       cors: {
-        // origin: 'http://localhost:3000',
         origin: true,
         credentials: true,
       },
