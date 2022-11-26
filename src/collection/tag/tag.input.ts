@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class CreateMyTagInput {
+export class CreateTagInput {
   @Field()
   color: string;
 

@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tag } from './tag.entity';
-import { TagType } from './tag.type.';
 import { v4 as uuid } from 'uuid';
-import { CreateMyTagInput } from './tag.input';
 import { User } from '../user/user.entity';
+import { Tag } from './tag.entity';
+import { CreateTagInput } from './tag.input';
 
 @Injectable()
 export class TagService {
@@ -20,8 +19,16 @@ export class TagService {
     return tag;
   }
 
-  async createMyTag(
-    createUserInput: CreateMyTagInput,
+  async getTabByIdUser(userId): Promise<Tag[]> {
+    const tags = await this.tagRepository.find({
+      where: { user_id: userId },
+    });
+
+    return tags;
+  }
+
+  async createTag(
+    createUserInput: CreateTagInput,
     user_id: string,
   ): Promise<Tag> {
     const { color, name } = createUserInput;

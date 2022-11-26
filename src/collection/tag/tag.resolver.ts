@@ -1,8 +1,7 @@
-import { Query } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GetCurrentUser } from 'src/common/decorators';
 import { UserService } from '../user/user.service';
-import { CreateMyTagInput } from './tag.input';
+import { CreateTagInput } from './tag.input';
 import { TagService } from './tag.service';
 import { TagType } from './tag.type.';
 
@@ -13,21 +12,27 @@ export class TagResolver {
     private userService: UserService,
   ) {}
 
+  @Query((_returns) => [TagType])
+  async getTag(@GetCurrentUser() user) {
+    const { sub } = user;
+
+    const tags = await this.tagService.getTabByIdUser(sub);
+
+    return tags;
+  }
+
   @Mutation((_returns) => TagType)
-  createMyTag(
-    @Args('createMyTagInput') createMyTagInput: CreateMyTagInput,
+  createTag(
+    @Args('createTagInput') createTagInput: CreateTagInput,
     @GetCurrentUser() user,
   ) {
     const { sub } = user;
 
-    return this.tagService.createMyTag(createMyTagInput, sub);
+    return this.tagService.createTag(createTagInput, sub);
   }
 
   @Mutation((_returns) => Boolean)
-  async deleteTag(
-    @Args('deleteMyTagInput') id: string,
-    @GetCurrentUser() user,
-  ) {
+  async deleteTag(@Args('deleteMyInput') id: string, @GetCurrentUser() user) {
     const { sub } = user;
     const userInfo = await this.tagService.getTagById(id);
 
