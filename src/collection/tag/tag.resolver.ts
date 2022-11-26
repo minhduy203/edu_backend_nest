@@ -34,9 +34,9 @@ export class TagResolver {
   @Mutation((_returns) => Boolean)
   async deleteTag(@Args('deleteMyInput') id: string, @GetCurrentUser() user) {
     const { sub } = user;
-    const userInfo = await this.tagService.getTagById(id);
+    const tag = await this.tagService.getTagById(id);
 
-    if (userInfo.user_id === sub) {
+    if (tag.user_id === sub) {
       return this.tagService.deleteTag(id);
     } else {
       throw new Error("You don't have permission to delete people's tag");
