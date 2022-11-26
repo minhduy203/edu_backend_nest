@@ -58,7 +58,6 @@ export class AuthResolver {
     if (!user) throw new ForbiddenException('Access Denied');
 
     const passwordMatches = await argon2.verify(user.password, password);
-    console.log('user', user, password);
     if (!passwordMatches) throw new ForbiddenException('Access Denied 2');
 
     const { accessToken, refreshToken } = await this.authService.getTokens(

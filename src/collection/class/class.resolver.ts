@@ -131,7 +131,6 @@ export class ClassResolver {
 
   @ResolveField()
   async students(@Parent() classRoom: Class) {
-    console.log('classRoom', classRoom);
     return this.userService.getManyUsers(classRoom.students);
   }
 

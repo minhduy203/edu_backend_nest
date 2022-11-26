@@ -25,7 +25,6 @@ export class AuthService {
   async register(user: RegisterInput): Promise<User> {
     const newUser = await this.userRepository.save(user);
 
-    console.log('new User', newUser);
     return newUser;
   }
 
