@@ -74,5 +74,5 @@ export class CreateMyClassInput {
   end_date: Date;
 
   @Field()
-  banner: string;
+  avatar: string;
 }

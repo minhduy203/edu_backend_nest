@@ -56,12 +56,12 @@ export class ClassService {
     owner: string,
     createClassInput: CreateMyClassInput,
   ): Promise<Class> {
-    const { name, scoreFactor, banner, end_date, from_date } = createClassInput;
+    const { name, scoreFactor, avatar, end_date, from_date } = createClassInput;
     const classRoom = this.classRepository.create({
       id: uuid(),
       name,
       owner,
-      banner,
+      avatar,
       end_date,
       from_date,
       scoreFactor,

@@ -20,7 +20,7 @@ export class Class {
   name: string;
 
   @Column()
-  banner: string;
+  avatar: string;
 
   @Column()
   owner: string;
