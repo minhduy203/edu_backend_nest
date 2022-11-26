@@ -5,7 +5,7 @@ import { JwtPayload } from '../type';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../collection/user/user.entity';
 import { IsNull, Not, Repository } from 'typeorm';
-import { v4 as uuid } from 'uuid';
+
 import * as argon2 from 'argon2';
 import { LoginInput, RegisterInput } from './auth.input';
 
@@ -16,59 +16,16 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async getMeByEmail(email): Promise<User> {
-    const info = await this.userRepository.findOneBy({ email });
-    return info;
-  }
-
   async me(user): Promise<User> {
     const { sub } = user;
     const info = await this.userRepository.findOneBy({ id: sub });
     return info;
   }
 
-  async register(registerInput: RegisterInput): Promise<User> {
-    const { email, password, username, role } = registerInput;
-    const firstName = username.split(' ').slice(0, -1).join(' ');
-    const lastName = username.split(' ').slice(-1).join(' ');
+  async register(user: RegisterInput): Promise<User> {
+    const newUser = await this.userRepository.save(user);
 
-    if (!email || !password || !username) {
-      throw new Error('Require email and password');
-    }
-
-    const hashedPassword = await argon2.hash(password);
-    const user = this.userRepository.create({
-      id: uuid(),
-      firstName,
-      lastName,
-      role,
-      email,
-      password: hashedPassword,
-      token_version: 0,
-    });
-
-    await this.userRepository.save(user);
-
-    return user;
-  }
-
-  async login(loginInput: LoginInput): Promise<Tokens> {
-    const { email, password } = loginInput;
-    const user = await this.userRepository.findOneBy({ email });
-
-    if (!user) throw new ForbiddenException('Access Denied');
-
-    const passwordMatches = await argon2.verify(user.password, password);
-    if (!passwordMatches) throw new ForbiddenException('Access Denied');
-
-    const tokens = await this.getTokens(
-      user.id,
-      user.email,
-      user.token_version,
-    );
-    // await this.updateRtHash(user.id, tokens.refreshToken);
-
-    return tokens;
+    return newUser;
   }
 
   async logout(userId: string): Promise<boolean> {

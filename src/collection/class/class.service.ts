@@ -4,7 +4,12 @@ import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { User } from '../user/user.entity';
 import { Class } from './class.entity';
-import { CreateClassInput, UpdateClassInput } from './class.input';
+import {
+  CreateClassInput,
+  CreateMyClassInput,
+  UpdateClassInput,
+  UpdateMyClassInput,
+} from './class.input';
 
 @Injectable()
 export class ClassService {
@@ -18,6 +23,12 @@ export class ClassService {
 
   async getClassById(id: string): Promise<Class> {
     return this.classRepository.findOneBy({ id });
+  }
+
+  async getClassesByIdTeacher(idTeacher: string): Promise<Class[]> {
+    return this.classRepository.find({
+      where: { owner: idTeacher },
+    });
   }
 
   async createClass(
@@ -41,6 +52,26 @@ export class ClassService {
     return classRoom;
   }
 
+  async createMyClass(
+    owner: string,
+    createClassInput: CreateMyClassInput,
+  ): Promise<Class> {
+    const { name, scoreFactor, banner, end_date, from_date } = createClassInput;
+    const classRoom = this.classRepository.create({
+      id: uuid(),
+      name,
+      owner,
+      banner,
+      end_date,
+      from_date,
+      scoreFactor,
+      code: uuid(),
+    });
+
+    await this.classRepository.save(classRoom);
+    return classRoom;
+  }
+
   async updateClass(
     updateClassInput: UpdateClassInput,
     id: string,
@@ -55,7 +86,37 @@ export class ClassService {
     return this.classRepository.save(classRoom);
   }
 
+  async updateMyClass(
+    updateMyClassInput: UpdateMyClassInput,
+    classId: string,
+    userId: string,
+  ): Promise<Class> {
+    const { name, scoreFactor, end_date, from_date } = updateMyClassInput;
+    const classRoom = await this.classRepository.findOneBy({ id: classId });
+
+    if (classRoom.owner === userId) {
+      name && (classRoom.name = name);
+      scoreFactor && (classRoom.scoreFactor = scoreFactor);
+      end_date && (classRoom.end_date = end_date);
+      from_date && (classRoom.from_date = from_date);
+    } else {
+      throw new Error("You don't have permission");
+    }
+
+    return this.classRepository.save(classRoom);
+  }
+
   async deleteClass(id: string): Promise<boolean> {
+    const existingClass = await this.classRepository.findOneBy({ id });
+    if (!existingClass) {
+      return false;
+    }
+    await this.classRepository.delete({ id });
+
+    return true;
+  }
+
+  async deleteMyClass(id: string): Promise<boolean> {
     const existingClass = await this.classRepository.findOneBy({ id });
     if (!existingClass) {
       return false;
