@@ -28,6 +28,25 @@ export class AuthService {
     return newUser;
   }
 
+  async login(loginInput: LoginInput): Promise<Tokens> {
+    const { email, password } = loginInput;
+    const user = await this.userRepository.findOneBy({ email });
+
+    if (!user) throw new ForbiddenException('Access Denied');
+
+    const passwordMatches = await argon2.verify(user.password, password);
+    if (!passwordMatches) throw new ForbiddenException('Access Denied');
+
+    const tokens = await this.getTokens(
+      user.id,
+      user.email,
+      user.token_version,
+    );
+    // await this.updateRtHash(user.id, tokens.refreshToken);
+
+    return tokens;
+  }
+
   async logout(userId: string): Promise<boolean> {
     const user = await this.userRepository.findOneBy({
       id: userId,

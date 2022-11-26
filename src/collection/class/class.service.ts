@@ -65,6 +65,8 @@ export class ClassService {
       end_date,
       from_date,
       scoreFactor,
+      // students: [],
+      // teachers: [],
       code: uuid(),
     });
 
