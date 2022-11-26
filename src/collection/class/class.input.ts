@@ -1,9 +1,14 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
+// import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+// import { FileUpload } from '../../type';
 
 @InputType()
 export class CreateClassInput {
   @Field()
   name: string;
+
+  @Field()
+  avatar: string;
 
   @Field()
   studentAmount: number;

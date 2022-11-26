@@ -2,14 +2,14 @@ import {
   Entity,
   Column,
   CreateDateColumn,
-  ObjectID,
+  UpdateDateColumn,
   ObjectIdColumn,
   PrimaryColumn,
-  UpdateDateColumn,
+  ObjectID,
 } from 'typeorm';
 
 @Entity()
-export class Class {
+export class Media {
   @ObjectIdColumn()
   _id: ObjectID;
 
@@ -20,31 +20,16 @@ export class Class {
   name: string;
 
   @Column()
-  banner: string;
+  fileName: string;
 
   @Column()
-  owner: string;
+  mimeType: string;
 
   @Column()
-  studentAmount: number;
+  size: number;
 
   @Column()
-  scoreFactor: number;
-
-  @Column({ default: [] })
-  teachers: string[];
-
-  @Column({ default: [] })
-  students: string[];
-
-  @Column()
-  code: string;
-
-  @Column()
-  end_date: Date;
-
-  @Column()
-  from_date: Date;
+  key: string;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Role } from '../../type';
+import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+import { FileUpload, Role } from '../../type';
 import { ClassType } from '../class/class.type';
 
 @ObjectType('User')
@@ -14,6 +15,9 @@ export class UserType {
   email: string;
 
   password: string;
+
+  @Field(() => GraphQLUpload)
+  avatar: Promise<FileUpload>;
 
   @Field((_type) => Role, { nullable: true })
   role: Role;

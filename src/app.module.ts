@@ -12,6 +12,10 @@ import { GqlGuard } from './common/guards';
 import { ConfigModule } from '@nestjs/config';
 import { TagModule } from './collection/tag/tag.module';
 import { Tag } from './collection/tag/tag.entity';
+import { MediaModule } from './collection/media/media.module';
+import { Media } from './collection/media/media.entity';
+import { QuestionModule } from './collection/question/question.module';
+import { Question } from './collection/question/question.entity';
 
 @Module({
   imports: [
@@ -24,7 +28,7 @@ import { Tag } from './collection/tag/tag.entity';
       database: 'edu',
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [User, Class, Tag],
+      entities: [User, Class, Tag, Media, Question],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -42,6 +46,8 @@ import { Tag } from './collection/tag/tag.entity';
     ClassModule,
     AuthModule,
     TagModule,
+    MediaModule,
+    QuestionModule,
   ],
   providers: [
     {

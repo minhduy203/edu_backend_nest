@@ -1,7 +1,7 @@
 import {
-  Entity,
   Column,
   CreateDateColumn,
+  Entity,
   ObjectID,
   ObjectIdColumn,
   PrimaryColumn,
@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Class {
+export class Question {
   @ObjectIdColumn()
   _id: ObjectID;
 
@@ -17,38 +17,31 @@ export class Class {
   id: string;
 
   @Column()
-  name: string;
-
-  @Column()
-  banner: string;
-
-  @Column()
   owner: string;
 
   @Column()
-  studentAmount: number;
+  question: string;
 
   @Column()
-  scoreFactor: number;
-
-  @Column({ default: [] })
-  teachers: string[];
-
-  @Column({ default: [] })
-  students: string[];
+  answers: string[];
 
   @Column()
-  code: string;
+  isMutiple: boolean;
 
-  @Column()
-  end_date: Date;
-
-  @Column()
-  from_date: Date;
+  @Column((_type) => Answer)
+  correctAnswer: Answer[];
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+}
+
+export class Answer {
+  @Column()
+  text: string;
+
+  @Column()
+  result: boolean;
 }

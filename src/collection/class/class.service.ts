@@ -142,18 +142,18 @@ export class ClassService {
       this.userRepository.save(user);
     }
 
-    // const userList = await this.userRepository.find({
-    //   where: {
-    //     id: {
-    //       $in: studentIds,
-    //     } as any,
-    //   },
-    // });
+    const userList = await this.userRepository.find({
+      where: {
+        id: {
+          $in: studentIds,
+        } as any,
+      },
+    });
 
-    // for (const user of userList) {
-    //   user.classes=[...user.classes, classId];
-    //   this.userRepository.save(user);
-    // }
+    for (const user of userList) {
+      user.classes=[...user.classes, classId];
+      this.userRepository.save(user);
+    }
 
     return this.classRepository.save(classRoom);
   }
