@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { UserType } from '../user/user.type';
 
 @ObjectType()
 export class QuestionType {
@@ -8,17 +9,26 @@ export class QuestionType {
   @Field()
   id: string;
 
+  @Field((_type) => UserType)
+  owner: string;
+
   @Field()
   question: string;
 
-  @Field()
+  @Field((_type) => [String])
   answers: string[];
 
   @Field()
   isMutiple: boolean;
 
-  @Field((_type) => AnswerType)
+  @Field((_type) => [AnswerType])
   correctAnswer: AnswerType[];
+
+  @Field()
+  createdAt: Date;
+
+  @Field()
+  updatedAt: Date;
 }
 
 @ObjectType()
