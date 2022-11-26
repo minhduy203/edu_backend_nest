@@ -12,6 +12,7 @@ import { GqlGuard } from './common/guards';
 import { ConfigModule } from '@nestjs/config';
 import { MediaModule } from './collection/media/media.module';
 import { Media } from './collection/media/media.entity';
+import { QuestionModule } from './collection/question/question.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { Media } from './collection/media/media.entity';
     ClassModule,
     AuthModule,
     MediaModule,
+    QuestionModule,
   ],
   providers: [
     {
