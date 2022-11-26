@@ -12,6 +12,9 @@ export class ClassType {
   @Field()
   name: string;
 
+  @Field({ nullable: true })
+  avatar: string;
+
   @Field((_type) => UserType)
   owner: string;
 

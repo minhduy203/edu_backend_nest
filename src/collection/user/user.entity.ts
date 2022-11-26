@@ -6,11 +6,8 @@ import {
   ObjectIdColumn,
   PrimaryColumn,
   UpdateDateColumn,
-  OneToMany,
-  ManyToMany,
 } from 'typeorm';
 import { Role } from '../../type';
-import { Class } from '../class/class.entity';
 
 @Entity()
 export class User {

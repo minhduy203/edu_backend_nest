@@ -8,9 +8,7 @@ import {
 } from '@nestjs/graphql';
 import { JwtPayload } from '../../type';
 import { GetCurrentUser } from '../../common/decorators';
-import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import { UserType } from '../user/user.type';
 import { Class } from './class.entity';
 import {
   AssignUserToClassInput,
