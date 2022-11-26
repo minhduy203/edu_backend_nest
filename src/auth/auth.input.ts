@@ -13,7 +13,7 @@ export class RegisterInput {
   username: string;
 
   @Field()
-  role: Role
+  role: Role;
 }
 
 @InputType()

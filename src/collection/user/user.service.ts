@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserInput, UpdateUserInput } from './user.input';
+import {
+  CreateUserInput,
+  UpdateProfileInput,
+  UpdateUserInput,
+} from './user.input';
 import { In, Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { User } from './user.entity';
@@ -23,8 +27,16 @@ export class UserService {
   }
 
   async createUser(createUserInput: CreateUserInput): Promise<User> {
-    const { email, password, role, firstName, lastName, address, phoneNumber, classes } =
-      createUserInput;
+    const {
+      email,
+      password,
+      role,
+      firstName,
+      lastName,
+      address,
+      phoneNumber,
+      classes,
+    } = createUserInput;
     const hashedPassword = await argon2.hash(password);
     const user = this.userRepository.create({
       id: uuid(),
@@ -35,7 +47,8 @@ export class UserService {
       lastName,
       address,
       phoneNumber,
-      classes
+      classes,
+      token_version: 0,
     });
 
     await this.userRepository.save(user);
@@ -92,5 +105,44 @@ export class UserService {
     });
 
     return classList;
+  }
+
+  async updateProfile(id: string, profile: UpdateProfileInput): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    const {
+      firstName,
+      lastName,
+      address,
+      avatar,
+      newPassword,
+      oldPassword,
+      phoneNumber,
+    } = profile;
+
+    firstName && (user.firstName = firstName);
+    lastName && (user.lastName = lastName);
+    address && (user.address = address);
+    // avatar && (user.avatar = avatar);
+    phoneNumber && (user.phoneNumber = phoneNumber);
+
+    if (oldPassword && newPassword) {
+      const passwordMatches = await argon2.verify(user.password, oldPassword);
+
+      if (!passwordMatches) {
+        throw new Error('Password not match');
+      }
+
+      user.password = await argon2.hash(newPassword);
+    }
+
+    await this.userRepository.save(user);
+
+    return user;
+  }
+
+  async findByEmail(email): Promise<User> {
+    const info = await this.userRepository.findOneBy({ email });
+    return info;
   }
 }

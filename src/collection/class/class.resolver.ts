@@ -15,7 +15,9 @@ import { Class } from './class.entity';
 import {
   AssignUserToClassInput,
   CreateClassInput,
+  CreateMyClassInput,
   UpdateClassInput,
+  UpdateMyClassInput,
 } from './class.input';
 import { ClassService } from './class.service';
 import { ClassType } from './class.type';
@@ -32,9 +34,55 @@ export class ClassResolver {
     return this.classService.getAllClasses();
   }
 
+  @Query((_returns) => [ClassType])
+  async getMyClass(@GetCurrentUser() user: JwtPayload) {
+    const { sub } = user;
+
+    const classes = await this.classService.getClassesByIdTeacher(sub);
+
+    return classes;
+  }
+
   @Query((_returns) => ClassType)
   getClassById(@Args('id') id: string) {
     return this.classService.getClassById(id);
+  }
+
+  @Mutation((_returns) => ClassType)
+  updateMyClass(
+    @Args('updateMyClass') updateMyClassInput: UpdateMyClassInput,
+    @Args('id') id: string,
+    @GetCurrentUser() user: JwtPayload,
+  ) {
+    const { sub } = user;
+    return this.classService.updateMyClass(updateMyClassInput, id, sub);
+  }
+
+  @Mutation((_returns) => ClassType)
+  createMyClass(
+    @Args('createMyClass') createMyClass: CreateMyClassInput,
+    @GetCurrentUser() user: JwtPayload,
+  ) {
+    const { sub } = user;
+
+    return this.classService.createMyClass(sub, createMyClass);
+  }
+
+  @Mutation((_returns) => Boolean)
+  async deleteMyClass(
+    @Args('id') id: string,
+    @GetCurrentUser() user: JwtPayload,
+  ) {
+    const { sub } = user;
+
+    const classInfo = await this.classService.getClassById(sub);
+
+    if (classInfo.owner === sub) {
+      this.classService.deleteClass(id);
+    } else {
+      throw new Error('You not have permission');
+    }
+    return this.classService.deleteClass(id);
   }
 
   @Mutation((_returns) => ClassType)
