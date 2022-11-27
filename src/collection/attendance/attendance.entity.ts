@@ -26,11 +26,11 @@ export class Attendance {
   is_learn_date: boolean;
 
   @Column()
-  learn_date: Date;
+  learn_date?: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 }

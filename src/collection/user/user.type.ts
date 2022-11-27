@@ -16,8 +16,10 @@ export class UserType {
 
   password: string;
 
-  @Field(() => GraphQLUpload)
-  avatar: Promise<FileUpload>;
+  // @Field(() => GraphQLUpload)
+  // avatar: Promise<FileUpload>;
+  @Field()
+  avatar: string;
 
   @Field((_type) => Role, { nullable: true })
   role: Role;
