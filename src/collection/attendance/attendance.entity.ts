@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Attandance {
+export class Attendance {
   @ObjectIdColumn()
   _id: ObjectID;
 

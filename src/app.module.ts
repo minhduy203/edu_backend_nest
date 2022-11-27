@@ -16,8 +16,8 @@ import { MediaModule } from './collection/media/media.module';
 import { Media } from './collection/media/media.entity';
 import { QuestionModule } from './collection/question/question.module';
 import { Question } from './collection/question/question.entity';
-import { Attandance } from './collection/attandance/attandance.entity';
-import { AttandanceModule } from './collection/attandance/attandance.module';
+import { Attendance } from './collection/attendance/attendance.entity';
+import { AttendanceModule } from './collection/attendance/attendance.module';
 
 @Module({
   imports: [
@@ -30,7 +30,7 @@ import { AttandanceModule } from './collection/attandance/attandance.module';
       database: 'edu',
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [User, Class, Tag, Media, Question, Attandance],
+      entities: [User, Class, Tag, Media, Question, Attendance],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -50,7 +50,7 @@ import { AttandanceModule } from './collection/attandance/attandance.module';
     TagModule,
     MediaModule,
     QuestionModule,
-    AttandanceModule,
+    AttendanceModule,
   ],
   providers: [
     {
