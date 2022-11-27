@@ -28,8 +28,23 @@ export class UpdateAttendanceInput {
 }
 
 @InputType()
+export class CreateAndUpdateAttendanceInput {
+  @Field()
+  content: string;
+
+  @Field()
+  is_learn_date: boolean;
+
+  @Field({ nullable: true })
+  id: string;
+
+  @Field()
+  learn_date: string;
+}
+
+@InputType()
 export class UpdateAttendancesInput {
   // @Field((_type) => [AnswerInput], { nullable: true })
-  @Field((_type) => [UpdateAttendanceInput], { nullable: true })
-  attendances: UpdateAttendanceInput[];
+  @Field((_type) => [CreateAndUpdateAttendanceInput], { nullable: true })
+  attendances: CreateAndUpdateAttendanceInput[];
 }

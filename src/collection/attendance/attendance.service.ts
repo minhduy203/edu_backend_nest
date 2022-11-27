@@ -72,34 +72,32 @@ export class AttendanceService {
 
     // Handle mutate attendances
     updateAttendancesInput.attendances.forEach((attendance) => {
-      const indexOfAttendance = attendances.findIndex((atdc) => {
-        console.log('atdc', atdc, attendance);
-        return atdc.id === attendance.id;
-      });
-
-      // Chưa có trong database
-      if (!indexOfAttendance) {
+      if (!attendance.id) {
         const newAttendance = this.attendanceRepository.create({
           class_id,
-          content: 'Hello world',
+          content: attendance.content,
           id: uuid(),
-          is_learn_date: true,
+          is_learn_date: attendance.is_learn_date,
+          learn_date: attendance.learn_date,
         });
+
         attendances.push(newAttendance);
       } else {
-        // attendances[indexOfAttendance];
-        console.log('indexOfAttendance', indexOfAttendance);
+        const indexOfAttendance = attendances.findIndex(
+          (att) => (att.id = attendance.id),
+        );
+
+        if (indexOfAttendance) {
+          attendances[indexOfAttendance].content = attendance.content;
+          attendances[indexOfAttendance].is_learn_date =
+            attendance.is_learn_date;
+        } else {
+          throw new Error('ID Attendance invalid');
+        }
       }
     });
 
-    // console.log({
-    //   attendances: updateAttendancesInput.attendances,
-    //   class_id,
-    // });
-
     this.attendanceRepository.save(attendances);
-
-    console.log('attendances', attendances);
 
     return attendances;
   }
