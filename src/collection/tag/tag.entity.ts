@@ -1,7 +1,7 @@
 import {
-  Entity,
   Column,
   CreateDateColumn,
+  Entity,
   ObjectID,
   ObjectIdColumn,
   PrimaryColumn,
@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Class {
+export class Tag {
   @ObjectIdColumn()
   _id: ObjectID;
 
@@ -20,31 +20,10 @@ export class Class {
   name: string;
 
   @Column()
-  avatar: string;
+  user_id: string;
 
   @Column()
-  owner: string;
-
-  @Column()
-  studentAmount: number;
-
-  @Column()
-  scoreFactor: number;
-
-  @Column({ default: [] })
-  teachers: string[];
-
-  @Column({ default: [] })
-  students: string[];
-
-  @Column()
-  code: string;
-
-  @Column()
-  end_date: Date;
-
-  @Column()
-  from_date: Date;
+  color: string;
 
   @CreateDateColumn()
   createdAt: Date;

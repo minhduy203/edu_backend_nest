@@ -56,12 +56,12 @@ export class ClassService {
     owner: string,
     createClassInput: CreateMyClassInput,
   ): Promise<Class> {
-    const { name, scoreFactor, banner, end_date, from_date } = createClassInput;
+    const { name, scoreFactor, avatar, end_date, from_date } = createClassInput;
     const classRoom = this.classRepository.create({
       id: uuid(),
       name,
       owner,
-      banner,
+      avatar,
       end_date,
       from_date,
       scoreFactor,
@@ -134,7 +134,7 @@ export class ClassService {
   ): Promise<Class> {
     const classRoom = await this.classRepository.findOneBy({ id: classId });
 
-    classRoom.students = [...classRoom.students, ...studentIds];
+    classRoom.students = [...(classRoom?.students || []), ...studentIds];
 
     for (const userId of studentIds) {
       const user = await this.userRepository.findOneBy({ id: userId });
@@ -151,7 +151,7 @@ export class ClassService {
     });
 
     for (const user of userList) {
-      user.classes=[...user.classes, classId];
+      user.classes = [...user.classes, classId];
       this.userRepository.save(user);
     }
 

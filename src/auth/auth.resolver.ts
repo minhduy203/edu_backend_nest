@@ -63,7 +63,7 @@ export class AuthResolver {
     const { accessToken, refreshToken } = await this.authService.getTokens(
       user.id,
       user.email,
-      user.token_version,
+      user?.token_version || 0,
     );
     // await this.updateRtHash(user.id, tokens.refreshToken);
 

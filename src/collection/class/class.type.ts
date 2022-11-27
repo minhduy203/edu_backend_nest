@@ -34,6 +34,12 @@ export class ClassType {
   code: string;
 
   @Field()
+  from_date: Date;
+
+  @Field()
+  end_date: Date;
+
+  @Field()
   createdAt: Date;
 
   @Field()
