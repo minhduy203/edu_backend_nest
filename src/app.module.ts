@@ -10,12 +10,16 @@ import { Class } from './collection/class/class.entity';
 import { AuthModule } from './auth/auth.module';
 import { GqlGuard } from './common/guards';
 import { ConfigModule } from '@nestjs/config';
+import { TagModule } from './collection/tag/tag.module';
+import { Tag } from './collection/tag/tag.entity';
 import { MediaModule } from './collection/media/media.module';
 import { Media } from './collection/media/media.entity';
 import { QuestionModule } from './collection/question/question.module';
 import { Question } from './collection/question/question.entity';
 import { ExamModule } from './collection/exam/exam.module';
 import { Exam } from './collection/exam/exam.entity';
+import { Attendance } from './collection/attendance/attendance.entity';
+import { AttendanceModule } from './collection/attendance/attendance.module';
 
 @Module({
   imports: [
@@ -28,7 +32,7 @@ import { Exam } from './collection/exam/exam.entity';
       database: 'edu',
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [User, Class, Media, Question, Exam],
+      entities: [User, Class, Tag, Media, Question, Attendance, Exam],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -45,9 +49,11 @@ import { Exam } from './collection/exam/exam.entity';
     UserModule,
     ClassModule,
     AuthModule,
+    TagModule,
     MediaModule,
     QuestionModule,
     ExamModule,
+    AttendanceModule,
   ],
   providers: [
     {

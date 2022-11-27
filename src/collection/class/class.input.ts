@@ -1,5 +1,4 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { FileUpload } from '../../type';
 
 @InputType()
 export class CreateClassInput {
@@ -73,5 +72,5 @@ export class CreateMyClassInput {
   end_date: Date;
 
   @Field()
-  banner: string;
+  avatar: string;
 }

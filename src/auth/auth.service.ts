@@ -5,7 +5,7 @@ import { JwtPayload } from '../type';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../collection/user/user.entity';
 import { IsNull, Not, Repository } from 'typeorm';
-
+import { v4 as uuid } from 'uuid';
 import * as argon2 from 'argon2';
 import { LoginInput, RegisterInput } from './auth.input';
 
@@ -22,7 +22,25 @@ export class AuthService {
     return info;
   }
 
-  async register(user: RegisterInput): Promise<User> {
+  async register(registerInput: RegisterInput): Promise<User> {
+    const { email, password, username, role } = registerInput;
+    const firstName = username.split(' ').slice(0, -1).join(' ');
+    const lastName = username.split(' ').slice(-1).join(' ');
+
+    if (!email || !password || !username) {
+      throw new Error('Require email and password');
+    }
+
+    const hashedPassword = await argon2.hash(password);
+
+    const user = this.userRepository.create({
+      id: uuid(),
+      firstName,
+      lastName,
+      role,
+      email,
+      password: hashedPassword,
+    });
     const newUser = await this.userRepository.save(user);
 
     return newUser;
@@ -98,7 +116,7 @@ export class AuthService {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
         secret: 'AT_SECRET',
-        expiresIn: '15m',
+        expiresIn: '1d',
       }),
       this.jwtService.signAsync(
         { ...jwtPayload, token_version: tokenVersion },

@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { QuestionType } from '../question/question.type';
 import { ClassType } from '../class/class.type';
-
+import { TagType } from '../tag/tag.type.';
 
 @ObjectType()
 export class ExamType {
@@ -14,29 +14,32 @@ export class ExamType {
   @Field()
   name: string;
 
-  @Field(_type=>[QuestionType])
-  questions: string[]
+  @Field((_type) => [QuestionType])
+  questions: string[];
 
-  @Field(_type=>ClassType)
-  classRoom: string
+  @Field((_type) => [TagType], { nullable: true })
+  tags: string[];
 
-  @Field()
-  dateFrom: Date
-
-  @Field()
-  dateEnd: Date
+  @Field((_type) => ClassType)
+  classRoom: string;
 
   @Field()
-  minutes: number
+  dateFrom: Date;
 
   @Field()
-  questionAmount: number
+  dateEnd: Date;
 
   @Field()
-  scoreFactor: number
+  minutes: number;
 
   @Field()
-  isAllowReview: boolean
+  questionAmount: number;
+
+  @Field()
+  scoreFactor: number;
+
+  @Field()
+  isAllowReview: boolean;
 
   @Field()
   createdAt: Date;

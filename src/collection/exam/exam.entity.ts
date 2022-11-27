@@ -23,6 +23,9 @@ export class Exam {
   questions: string[];
 
   @Column()
+  tags: string[];
+
+  @Column()
   classRoom: string;
 
   @Column()

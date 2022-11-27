@@ -8,6 +8,9 @@ export class CreateExamInput {
   @Field((_type) => [ID])
   questions: string[];
 
+  @Field((_type) => [ID], { nullable: true })
+  tags: string[];
+
   @Field((_type) => ID)
   classRoom: string;
 
@@ -37,6 +40,9 @@ export class UpdateExamInput {
 
   @Field((_type) => [ID], { nullable: true })
   questions: string[];
+
+  @Field((_type) => [ID])
+  tags: string[];
 
   @Field((_type) => ID, { nullable: true })
   classRoom: string;

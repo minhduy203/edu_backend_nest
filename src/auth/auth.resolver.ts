@@ -28,25 +28,7 @@ export class AuthResolver {
   @Public()
   @Mutation((_returns) => UserType)
   async register(@Args('registerInput') registerInput: RegisterInput) {
-    const { email, password, username, role } = registerInput;
-    const firstName = username.split(' ').slice(0, -1).join(' ');
-    const lastName = username.split(' ').slice(-1).join(' ');
-
-    if (!email || !password || !username) {
-      throw new Error('Require email and password');
-    }
-
-    const hashedPassword = await argon2.hash(password);
-
-    const user = await this.userService.createUser({
-      firstName,
-      lastName,
-      role,
-      email,
-      password: hashedPassword,
-    });
-
-    return user;
+    return this.authService.register(registerInput);
   }
 
   @Public()
@@ -63,7 +45,7 @@ export class AuthResolver {
     const { accessToken, refreshToken } = await this.authService.getTokens(
       user.id,
       user.email,
-      user.token_version,
+      user?.token_version || 0,
     );
     // await this.updateRtHash(user.id, tokens.refreshToken);
 

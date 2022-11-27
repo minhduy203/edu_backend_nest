@@ -24,6 +24,7 @@ export class ExamService {
     const {
       name,
       classRoom,
+      tags = null,
       dateFrom,
       dateEnd,
       isAllowReview,
@@ -36,6 +37,7 @@ export class ExamService {
       id: uuid(),
       name,
       classRoom,
+      tags,
       dateFrom,
       dateEnd,
       isAllowReview,
