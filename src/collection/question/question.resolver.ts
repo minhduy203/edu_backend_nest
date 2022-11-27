@@ -36,8 +36,6 @@ export class QuestionResolver {
     @GetCurrentUser() user: JwtPayload,
     @Args('createQuestionInput') createQuestionInput: CreateQuestionInput,
   ) {
-    console.log(user);
-    
     return this.questionService.createQuestion(createQuestionInput, user.sub);
   }
 

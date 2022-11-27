@@ -36,7 +36,6 @@
     "argon2": "^0.30.1",
     "aws-sdk": "^2.1261.0",
     "graphql": "^16.6.0",
-    "graphql-upload": "14",
     "mongodb": "^4.11.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Question, Answer } from './question.entity';
+import { Question } from './question.entity';
 import { CreateQuestionInput, UpdateQuestionInput } from './question.input';
 import { v4 as uuid } from 'uuid';
 
@@ -34,7 +34,7 @@ export class QuestionService {
       correctAnswer,
     };
     const result = this.questionRepository.create(data);
-    // await this.questionRepository.insert(data);
+    await this.questionRepository.insert(data);
     return result;
   }
 
@@ -45,10 +45,10 @@ export class QuestionService {
     const { question, answers, isMutiple, correctAnswer } = updateQuestionInput;
     const data = await this.questionRepository.findOneBy({ id: questionId });
 
-    (data.question = question || data.question),
-      (data.answers = answers || data.answers),
-      (data.isMutiple = isMutiple || data.isMutiple),
-      (data.correctAnswer = correctAnswer || data.correctAnswer);
+    data.question = question || data.question;
+    data.answers = answers || data.answers;
+    data.isMutiple = isMutiple || data.isMutiple;
+    data.correctAnswer = correctAnswer || data.correctAnswer;
 
     return this.questionRepository.save(data);
   }
@@ -61,5 +61,17 @@ export class QuestionService {
     await this.questionRepository.delete({ id });
 
     return true;
+  }
+
+  async getManyQuestions(questionIds: string[]): Promise<Question[]> {
+    const questionList = await this.questionRepository.find({
+      where: {
+        id: {
+          $in: questionIds,
+        } as any,
+      },
+    });
+
+    return questionList;
   }
 }
