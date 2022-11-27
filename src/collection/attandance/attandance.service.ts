@@ -4,7 +4,10 @@ import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { User } from '../user/user.entity';
 import { Attandance } from './attandance.entity';
-import { CreateAttandanceInput } from './attandance.input';
+import {
+  CreateAttandanceInput,
+  UpdateAttandanceInput,
+} from './attandance.input';
 
 @Injectable()
 export class AttandanceService {
@@ -14,9 +17,20 @@ export class AttandanceService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async createAttandance(createAttandanceInput: CreateAttandanceInput, userId) {
+  async getAttandanceByIdClass(class_id: string) {
+    const attandanceOfClasses = await this.attandanceRepository.find({
+      where: {
+        class_id,
+      },
+    });
+
+    return attandanceOfClasses;
+  }
+
+  async createAttandance(createAttandanceInput: CreateAttandanceInput) {
     const { class_id, content, is_learn_date, learn_date } =
       createAttandanceInput;
+
     const newAttandance = await this.attandanceRepository.create({
       id: uuid(),
       class_id,
@@ -29,6 +43,25 @@ export class AttandanceService {
 
     return newAttandance;
   }
+
+  async updateAttandance(
+    updateAttandanceInput: UpdateAttandanceInput,
+    id: string,
+  ) {
+    const { content, is_learn_date } = updateAttandanceInput;
+
+    const attandance = await this.attandanceRepository.findOneBy({
+      id,
+    });
+
+    content && (attandance.content = content);
+    is_learn_date && (attandance.is_learn_date = is_learn_date);
+
+    await this.attandanceRepository.save(attandance);
+
+    return attandance;
+  }
+
   // async getTagById(id): Promise<Attandance> {
   //   const tag = await this.attandanceRepository.findOneBy({ id });
 

@@ -1,7 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { GetCurrentUser } from 'src/common/decorators';
 import { UserService } from '../user/user.service';
-import { CreateAttandanceInput } from './attandance.input';
+import {
+  CreateAttandanceInput,
+  UpdateAttandanceInput,
+} from './attandance.input';
 import { AttandanceService } from './attandance.service';
 import { AttandanceType } from './attandance.type.';
 
@@ -12,23 +14,26 @@ export class AttandanceResolver {
     private userService: UserService,
   ) {}
 
-  // @Query((_returns) => [TagType])
-  // async getTag(@GetCurrentUser() user) {
-  //   const { sub } = user;
+  @Query((_returns) => [AttandanceType])
+  async getAttandanceByClass(@Args('id') id: string) {
+    const attandances = await this.attandanceService.getAttandanceByIdClass(id);
 
-  //   const tags = await this.attandanceService.getTabByIdUser(sub);
-
-  //   return tags;
-  // }
+    return attandances;
+  }
 
   @Mutation((_returns) => AttandanceType)
   createAttandance(
     @Args('createAttandanceInput') createAttandanceInput: CreateAttandanceInput,
-    @GetCurrentUser() user,
   ) {
-    const { sub } = user;
+    return this.attandanceService.createAttandance(createAttandanceInput);
+  }
 
-    return this.attandanceService.createAttandance(createAttandanceInput, sub);
+  @Mutation((_return) => AttandanceType)
+  updateAttandance(
+    @Args('updateAttandanceInput') updateAttandanceInput: UpdateAttandanceInput,
+    @Args('id') id: string,
+  ) {
+    return this.attandanceService.updateAttandance(updateAttandanceInput, id);
   }
 
   // @Mutation((_returns) => Boolean)

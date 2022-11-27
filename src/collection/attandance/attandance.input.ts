@@ -14,3 +14,12 @@ export class CreateAttandanceInput {
   @Field()
   is_learn_date: boolean;
 }
+
+@InputType()
+export class UpdateAttandanceInput {
+  @Field()
+  content: string;
+
+  @Field()
+  is_learn_date: boolean;
+}
