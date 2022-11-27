@@ -51,6 +51,8 @@ export class UserService {
       token_version: 0,
     });
 
+    console.log("newUser", newUser)
+
     await this.userRepository.save(newUser);
     return newUser;
   }
