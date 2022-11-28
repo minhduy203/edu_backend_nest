@@ -22,6 +22,8 @@ import { Attendance } from './collection/attendance/attendance.entity';
 import { AttendanceModule } from './collection/attendance/attendance.module';
 import { AssignmentModule } from './collection/assignment/assignment.module';
 import { Assignment } from './collection/assignment/assignment.entity';
+import { ExamClassModule } from './collection/exam-class/exam-class.module';
+import { ExamClass } from './collection/exam-class/exam-class.entity';
 
 @Module({
   imports: [
@@ -42,6 +44,7 @@ import { Assignment } from './collection/assignment/assignment.entity';
         Question,
         Attendance,
         Exam,
+        ExamClass,
         Assignment,
       ],
     }),
@@ -66,6 +69,7 @@ import { Assignment } from './collection/assignment/assignment.entity';
     ExamModule,
     AttendanceModule,
     AssignmentModule,
+    ExamClassModule,
   ],
   providers: [
     {

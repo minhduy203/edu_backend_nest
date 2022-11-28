@@ -6,7 +6,6 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { ClassService } from '../class/class.service';
 import { QuestionService } from '../question/question.service';
 import { TagService } from '../tag/tag.service';
 import { Exam } from './exam.entity';
@@ -19,7 +18,6 @@ export class ExamResolver {
   constructor(
     private examService: ExamService,
     private questionService: QuestionService,
-    private classService: ClassService,
     private tagService: TagService,
   ) {}
 
@@ -54,11 +52,6 @@ export class ExamResolver {
   @ResolveField()
   async questions(@Parent() exam: Exam) {
     return this.questionService.getManyQuestions(exam.questions);
-  }
-
-  @ResolveField()
-  async classRoom(@Parent() exam: Exam) {
-    return this.classService.getClassById(exam.classRoom);
   }
 
   @ResolveField()

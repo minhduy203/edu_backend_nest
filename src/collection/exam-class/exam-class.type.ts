@@ -2,23 +2,36 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { QuestionType } from '../question/question.type';
 import { ClassType } from '../class/class.type';
 import { TagType } from '../tag/tag.type.';
+import { ExamType } from '../exam/exam.type';
 
 @ObjectType()
-export class ExamType {
+export class ExamClassType {
   @Field((_type) => ID)
   _id: string;
 
   @Field()
   id: string;
 
+  @Field((_type) => ExamType)
+  exam: string;
+
+  @Field((_type) => ClassType)
+  classRoom: string;
+
   @Field()
-  name: string;
+  dateFrom: Date;
 
-  @Field((_type) => [QuestionType])
-  questions: string[];
+  @Field()
+  dateEnd: Date;
 
-  @Field((_type) => [TagType], { nullable: true })
-  tags: string[];
+  @Field()
+  minutes: number;
+
+  @Field()
+  scoreFactor: number;
+
+  @Field()
+  isAllowReview: boolean;
 
   @Field()
   createdAt: Date;

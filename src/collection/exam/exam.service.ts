@@ -4,15 +4,12 @@ import { Repository } from 'typeorm';
 import { Exam } from './exam.entity';
 import { CreateExamInput, UpdateExamInput } from './exam.input';
 import { v4 as uuid } from 'uuid';
-import { Class } from '../class/class.entity';
 
 @Injectable()
 export class ExamService {
   constructor(
     @InjectRepository(Exam)
     private examRepository: Repository<Exam>,
-    @InjectRepository(Class)
-    private classRepository: Repository<Class>,
   ) {}
 
   async getAllExam(): Promise<Exam[]> {
@@ -24,29 +21,12 @@ export class ExamService {
   }
 
   async createExam(createExamInput: CreateExamInput): Promise<Exam> {
-    const {
-      name,
-      classRoom,
-      tags = null,
-      dateFrom,
-      dateEnd,
-      isAllowReview,
-      minutes,
-      questions,
-    } = createExamInput;
-    const classById = await this.classRepository.findOneBy({ id: classRoom });
-    const scoreFactor = classById.scoreFactor;
+    const { name, tags = null, questions } = createExamInput;
     const data = {
       id: uuid(),
       name,
-      classRoom,
       tags,
-      dateFrom,
-      dateEnd,
-      isAllowReview,
-      minutes,
       questions,
-      scoreFactor,
     };
     const result = this.examRepository.create(data);
     await this.examRepository.save(data);
@@ -57,26 +37,12 @@ export class ExamService {
     updateExamInput: UpdateExamInput,
     examId: string,
   ): Promise<Exam> {
-    const {
-      name,
-      classRoom,
-      dateFrom,
-      dateEnd,
-      isAllowReview,
-      minutes,
-      questions,
-      scoreFactor,
-    } = updateExamInput;
+    const { name, questions, tags } = updateExamInput;
     const data = await this.examRepository.findOneBy({ id: examId });
 
     data.name = name || data.name;
-    data.classRoom = classRoom || data.classRoom;
-    data.dateFrom = dateFrom || data.dateFrom;
-    data.dateEnd = dateEnd || data.dateEnd;
-    data.isAllowReview = isAllowReview || data.isAllowReview;
-    data.minutes = minutes || data.minutes;
     data.questions = questions || data.questions;
-    data.scoreFactor = scoreFactor || data.scoreFactor;
+    data.tags = tags || data.tags;
 
     return this.examRepository.save(data);
   }

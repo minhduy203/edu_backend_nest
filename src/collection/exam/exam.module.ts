@@ -10,9 +10,8 @@ import { ExamService } from './exam.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Exam, Class]),
+    TypeOrmModule.forFeature([Exam]),
     QuestionModule,
-    ClassModule,
     TagModule,
   ],
   providers: [ExamService, ExamResolver],

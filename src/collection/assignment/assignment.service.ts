@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { ExamClass } from '../exam-class/exam-class.entity';
 import { Exam } from '../exam/exam.entity';
 import { Question } from '../question/question.entity';
 import { Assignment } from './assignment.entity';
@@ -20,6 +21,8 @@ export class AssignmentService {
     private questionRepository: Repository<Question>,
     @InjectRepository(Exam)
     private examRepository: Repository<Exam>,
+    @InjectRepository(ExamClass)
+    private examClassRepository: Repository<ExamClass>,
   ) {}
 
   async getAllAssignment(): Promise<Assignment[]> {
@@ -34,17 +37,15 @@ export class AssignmentService {
     createAssignmentInput: CreateAssignmentInput,
     user: string,
   ): Promise<Assignment> {
-    const { answerSubmit, exam, minuteDoing, startTime } =
-      createAssignmentInput;
-    const score = await this.calcScore(answerSubmit, exam);
+    const { examClass, startTime } = createAssignmentInput;
     const data = {
       id: uuid(),
-      answerSubmit,
-      exam,
-      minuteDoing,
-      startTime,
       user,
-      score,
+      examClass,
+      startTime,
+      answerSubmit: null,
+      minuteDoing: null,
+      score: null,
     };
     const result = this.assignmentRepository.create(data);
     await this.assignmentRepository.insert(data);
@@ -56,16 +57,18 @@ export class AssignmentService {
     updateAssignmentInput: UpdateAssignmentInput,
     assignmentId: string,
   ): Promise<Assignment> {
-    const { answerSubmit, exam, minuteDoing, startTime } =
+    const { answerSubmit, examClass, minuteDoing, startTime } =
       updateAssignmentInput;
     const data = await this.assignmentRepository.findOneBy({
       id: assignmentId,
     });
+    const score = await this.calcScore(answerSubmit, data.examClass);
 
     data.answerSubmit = answerSubmit || data.answerSubmit;
-    data.exam = exam || data.exam;
     data.minuteDoing = minuteDoing || data.minuteDoing;
     data.startTime = startTime || data.startTime;
+    data.examClass = examClass || data.examClass;
+    data.score = score;
 
     return this.assignmentRepository.save(data);
   }
@@ -83,9 +86,12 @@ export class AssignmentService {
   }
 
   //Calc score
-  async calcScore(answerSubmit: AnswerSubmitInput[], examId: string) {
+  async calcScore(answerSubmit: AnswerSubmitInput[], examClassId: string) {
     let correctNumber = 0;
-    const exam = await this.examRepository.findOneBy({ id: examId });
+    const examClass = await this.examClassRepository.findOneBy({
+      id: examClassId,
+    });
+    const exam = await this.examRepository.findOneBy({ id: examClass.exam });
 
     for (const answer of answerSubmit) {
       let match = 0;
@@ -114,7 +120,8 @@ export class AssignmentService {
       }
     }
 
-    const result = correctNumber * (exam.scoreFactor / exam.questions.length);
+    const result =
+      correctNumber * (examClass.scoreFactor / exam.questions.length);
 
     return result;
   }

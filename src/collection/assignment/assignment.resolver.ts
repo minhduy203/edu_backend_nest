@@ -8,7 +8,7 @@ import {
 } from '@nestjs/graphql';
 import { GetCurrentUser } from '../../common/decorators';
 import { JwtPayload } from '../../type';
-import { ExamService } from '../exam/exam.service';
+import { ExamClassService } from '../exam-class/exam-class.service';
 import { UserService } from '../user/user.service';
 import { Assignment } from './assignment.entity';
 import {
@@ -22,7 +22,7 @@ import { AssignmentType } from './assignment.type';
 export class AssignmentResolver {
   constructor(
     private assignmentService: AssignmentService,
-    private examService: ExamService,
+    private examClassService: ExamClassService,
     private userService: UserService,
   ) {}
 
@@ -61,8 +61,8 @@ export class AssignmentResolver {
   }
 
   @ResolveField()
-  async exam(@Parent() assignment: Assignment) {
-    return this.examService.getExamById(assignment.id);
+  async examClass(@Parent() assignment: Assignment) {
+    return this.examClassService.getExamClassById(assignment.id);
   }
 
   @ResolveField()

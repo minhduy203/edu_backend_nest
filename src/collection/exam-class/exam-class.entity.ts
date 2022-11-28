@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Assignment {
+export class ExamClass {
   @ObjectIdColumn()
   _id: ObjectID;
 
@@ -17,34 +17,29 @@ export class Assignment {
   id: string;
 
   @Column()
-  examClass: string;
+  exam: string;
 
   @Column()
-  user: string;
+  classRoom: string;
 
   @Column()
-  startTime: Date;
-
-  @Column((_type) => AnswerSubmit)
-  answerSubmit: AnswerSubmit[];
+  dateFrom: Date;
 
   @Column()
-  score: number;
+  dateEnd: Date;
 
   @Column()
-  minuteDoing: number;
+  minutes: number;
+
+  @Column()
+  scoreFactor: number;
+
+  @Column()
+  isAllowReview: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-}
-
-export class AnswerSubmit {
-  @Column()
-  questionId: string;
-
-  @Column()
-  answer: string[];
 }
