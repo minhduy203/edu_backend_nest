@@ -1,12 +1,9 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateQuestionInput {
   @Field()
   question: string;
-
-  @Field((_type) => [String])
-  answers: string[];
 
   @Field()
   isMutiple: boolean;
@@ -19,9 +16,6 @@ export class CreateQuestionInput {
 export class UpdateQuestionInput {
   @Field({ nullable: true })
   question: string;
-
-  @Field((_type) => [String], { nullable: true })
-  answers: string[];
 
   @Field({ nullable: true })
   isMutiple: boolean;

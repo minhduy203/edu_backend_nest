@@ -8,7 +8,13 @@ import { ExamResolver } from './exam.resolver';
 import { ExamService } from './exam.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Exam]), QuestionModule, ClassModule, TagModule],
+  imports: [
+    TypeOrmModule.forFeature([Exam]),
+    QuestionModule,
+    ClassModule,
+    TagModule,
+  ],
   providers: [ExamService, ExamResolver],
+  exports: [ExamService],
 })
 export class ExamModule {}

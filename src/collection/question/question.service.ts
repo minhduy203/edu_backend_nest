@@ -24,7 +24,9 @@ export class QuestionService {
     createQuestionInput: CreateQuestionInput,
     owner: string,
   ): Promise<Question> {
-    const { question, answers, isMutiple, correctAnswer } = createQuestionInput;
+    const { question, isMutiple, correctAnswer } = createQuestionInput;
+    const answers = [];
+    correctAnswer.forEach((item) => answers.push(item.text));
     const data = {
       id: uuid(),
       owner,
@@ -42,7 +44,9 @@ export class QuestionService {
     updateQuestionInput: UpdateQuestionInput,
     questionId: string,
   ): Promise<Question> {
-    const { question, answers, isMutiple, correctAnswer } = updateQuestionInput;
+    const { question, isMutiple, correctAnswer } = updateQuestionInput;
+    const answers = [];
+    correctAnswer.forEach((item) => answers.push(item.text));
     const data = await this.questionRepository.findOneBy({ id: questionId });
 
     data.question = question || data.question;

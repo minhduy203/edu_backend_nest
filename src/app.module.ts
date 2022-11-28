@@ -20,6 +20,8 @@ import { ExamModule } from './collection/exam/exam.module';
 import { Exam } from './collection/exam/exam.entity';
 import { Attendance } from './collection/attendance/attendance.entity';
 import { AttendanceModule } from './collection/attendance/attendance.module';
+import { AssignmentModule } from './collection/assignment/assignment.module';
+import { Assignment } from './collection/assignment/assignment.entity';
 
 @Module({
   imports: [
@@ -32,7 +34,16 @@ import { AttendanceModule } from './collection/attendance/attendance.module';
       database: 'edu',
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [User, Class, Tag, Media, Question, Attendance, Exam],
+      entities: [
+        User,
+        Class,
+        Tag,
+        Media,
+        Question,
+        Attendance,
+        Exam,
+        Assignment,
+      ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -54,6 +65,7 @@ import { AttendanceModule } from './collection/attendance/attendance.module';
     QuestionModule,
     ExamModule,
     AttendanceModule,
+    AssignmentModule,
   ],
   providers: [
     {
