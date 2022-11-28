@@ -38,9 +38,6 @@ export class Exam {
   minutes: number;
 
   @Column()
-  questionAmount: number;
-
-  @Column()
   scoreFactor: number;
 
   @Column()

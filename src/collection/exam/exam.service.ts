@@ -4,12 +4,15 @@ import { Repository } from 'typeorm';
 import { Exam } from './exam.entity';
 import { CreateExamInput, UpdateExamInput } from './exam.input';
 import { v4 as uuid } from 'uuid';
+import { Class } from '../class/class.entity';
 
 @Injectable()
 export class ExamService {
   constructor(
     @InjectRepository(Exam)
     private examRepository: Repository<Exam>,
+    @InjectRepository(Class)
+    private classRepository: Repository<Class>,
   ) {}
 
   async getAllExam(): Promise<Exam[]> {
@@ -29,10 +32,10 @@ export class ExamService {
       dateEnd,
       isAllowReview,
       minutes,
-      questionAmount,
       questions,
-      scoreFactor,
     } = createExamInput;
+    const classById = await this.classRepository.findOneBy({ id: classRoom });
+    const scoreFactor = classById.scoreFactor;
     const data = {
       id: uuid(),
       name,
@@ -42,7 +45,6 @@ export class ExamService {
       dateEnd,
       isAllowReview,
       minutes,
-      questionAmount,
       questions,
       scoreFactor,
     };
@@ -62,7 +64,6 @@ export class ExamService {
       dateEnd,
       isAllowReview,
       minutes,
-      questionAmount,
       questions,
       scoreFactor,
     } = updateExamInput;
@@ -74,7 +75,6 @@ export class ExamService {
     data.dateEnd = dateEnd || data.dateEnd;
     data.isAllowReview = isAllowReview || data.isAllowReview;
     data.minutes = minutes || data.minutes;
-    data.questionAmount = questionAmount || data.questionAmount;
     data.questions = questions || data.questions;
     data.scoreFactor = scoreFactor || data.scoreFactor;
 

@@ -114,8 +114,7 @@ export class AssignmentService {
       }
     }
 
-    const result =
-      correctNumber * (exam.questionAmount / exam.questions.length);
+    const result = correctNumber * (exam.scoreFactor / exam.questions.length);
 
     return result;
   }

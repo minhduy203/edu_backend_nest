@@ -33,9 +33,6 @@ export class ExamType {
   minutes: number;
 
   @Field()
-  questionAmount: number;
-
-  @Field()
   scoreFactor: number;
 
   @Field()

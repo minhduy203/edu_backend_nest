@@ -24,9 +24,6 @@ export class CreateExamInput {
   minutes: number;
 
   @Field()
-  questionAmount: number;
-
-  @Field()
   scoreFactor: number;
 
   @Field()
@@ -55,9 +52,6 @@ export class UpdateExamInput {
 
   @Field({ nullable: true })
   minutes: number;
-
-  @Field({ nullable: true })
-  questionAmount: number;
 
   @Field({ nullable: true })
   scoreFactor: number;
