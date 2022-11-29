@@ -6,7 +6,7 @@ export class CreateQuestionInput {
   question: string;
 
   @Field()
-  isMutiple: boolean;
+  isMultiple: boolean;
 
   @Field((_type) => [AnswerInput])
   correctAnswer: AnswerInput[];
@@ -18,7 +18,7 @@ export class UpdateQuestionInput {
   question: string;
 
   @Field({ nullable: true })
-  isMutiple: boolean;
+  isMultiple: boolean;
 
   @Field((_type) => [AnswerInput], { nullable: true })
   correctAnswer: AnswerInput[];

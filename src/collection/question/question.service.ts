@@ -24,7 +24,7 @@ export class QuestionService {
     createQuestionInput: CreateQuestionInput,
     owner: string,
   ): Promise<Question> {
-    const { question, isMutiple, correctAnswer } = createQuestionInput;
+    const { question, isMultiple, correctAnswer } = createQuestionInput;
     const answers = [];
     correctAnswer.forEach((item) => answers.push(item.text));
     const data = {
@@ -32,7 +32,7 @@ export class QuestionService {
       owner,
       question,
       answers,
-      isMutiple,
+      isMultiple,
       correctAnswer,
     };
     const result = this.questionRepository.create(data);
@@ -44,15 +44,15 @@ export class QuestionService {
     updateQuestionInput: UpdateQuestionInput,
     questionId: string,
   ): Promise<Question> {
-    const { question, isMutiple, correctAnswer } = updateQuestionInput;
+    const { question, isMultiple, correctAnswer } = updateQuestionInput;
     const answers = [];
     correctAnswer.forEach((item) => answers.push(item.text));
     const data = await this.questionRepository.findOneBy({ id: questionId });
 
-    data.question = question || data.question;
-    data.answers = answers || data.answers;
-    data.isMutiple = isMutiple || data.isMutiple;
-    data.correctAnswer = correctAnswer || data.correctAnswer;
+    question !== undefined && (data.question = question);
+    data.answers = answers;
+    isMultiple !== undefined && (data.isMultiple = isMultiple);
+    correctAnswer !== undefined && (data.correctAnswer = correctAnswer);
 
     return this.questionRepository.save(data);
   }

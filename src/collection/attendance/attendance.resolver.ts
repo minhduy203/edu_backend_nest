@@ -22,22 +22,22 @@ export class AttendanceResolver {
     return attendances;
   }
 
-  @Mutation((_returns) => [AttendanceType])
+  @Mutation((_returns) => Boolean)
   async updateAttendances(
     @Args('updateAttendancesInput')
     updateAttendancesInput: UpdateAttendancesInput,
-    @Args('class_id') class_id: string
+    @Args('class_id') class_id: string,
   ) {
     const attandances = await this.attendanceService.updateAttendanceMany(
       updateAttendancesInput,
-      class_id
+      class_id,
     );
     return attandances;
   }
 
   @Mutation((_returns) => AttendanceType)
   createAttendance(
-    @Args('createAttendanceInput') createAttendanceInput: CreateAttendanceInput
+    @Args('createAttendanceInput') createAttendanceInput: CreateAttendanceInput,
   ) {
     return this.attendanceService.createAttendance(createAttendanceInput);
   }
