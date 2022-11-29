@@ -6,6 +6,7 @@ import { ColumnScore } from './columnScore.entity';
 import {
   CreateColumnScoreInput,
   UpdateColumnScoreInput,
+  UpdateColumnScoresInput,
 } from './columnScore.input';
 import { v4 as uuid } from 'uuid';
 
@@ -62,6 +63,18 @@ export class ColumnScoreService {
     type && (attendance.type = type);
 
     return await this.columnScoreRepository.save(attendance);
+  }
+
+  async updateColumnScores(
+    updateColumnScoresInput: UpdateColumnScoresInput,
+    id: string,
+  ) {
+    const { columnScores } = updateColumnScoresInput;
+
+    console.log('columnScores', columnScores);
+
+    return true;
+    // return await this.columnScoreRepository.save(attendance);
   }
 
   // async updateAttendanceMany(
