@@ -26,7 +26,7 @@ export class Question {
   answers: string[];
 
   @Column()
-  isMutiple: boolean;
+  isMultiple: boolean;
 
   @Column((_type) => Answer)
   correctAnswer: Answer[];

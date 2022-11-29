@@ -24,6 +24,8 @@ import { AssignmentModule } from './collection/assignment/assignment.module';
 import { Assignment } from './collection/assignment/assignment.entity';
 import { ExamClassModule } from './collection/exam-class/exam-class.module';
 import { ExamClass } from './collection/exam-class/exam-class.entity';
+import { ColumnScore } from './collection/columnScore/columnScore.entity';
+import { ColumnScoreModule } from './collection/columnScore/columnScore.module';
 
 @Module({
   imports: [
@@ -46,6 +48,7 @@ import { ExamClass } from './collection/exam-class/exam-class.entity';
         Exam,
         ExamClass,
         Assignment,
+        ColumnScore,
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -70,6 +73,7 @@ import { ExamClass } from './collection/exam-class/exam-class.entity';
     AttendanceModule,
     AssignmentModule,
     ExamClassModule,
+    ColumnScoreModule,
   ],
   providers: [
     {
