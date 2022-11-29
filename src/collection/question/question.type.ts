@@ -24,7 +24,7 @@ export class QuestionType {
   @Field((_type) => [AnswerType])
   correctAnswer: AnswerType[];
 
-  @Field()
+  @Field({ nullable: true })
   createdAt: Date;
 
   @Field()
