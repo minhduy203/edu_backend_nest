@@ -23,7 +23,7 @@ export class AttendanceResolver {
   async updateAttendances(
     @Args('attendanceClassInput')
     attendancesInput: AttendanceClassInput,
-    @Args('class_id') schedule_id: string,
+    @Args('schedule_id') schedule_id: string,
   ) {
     const attandances = await this.AttendanceService.attendanceClass(
       attendancesInput,
