@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class CreateAttendanceInput {
+export class CreateScheduleInput {
   @Field()
   content: string;
 
@@ -16,7 +16,7 @@ export class CreateAttendanceInput {
 }
 
 @InputType()
-export class UpdateAttendanceInput {
+export class UpdateScheduleInput {
   @Field()
   content: string;
 
@@ -28,7 +28,7 @@ export class UpdateAttendanceInput {
 }
 
 @InputType()
-export class CreateAndUpdateAttendanceInput {
+export class CreateAndUpdateScheduleInput {
   @Field()
   content: string;
 
@@ -43,8 +43,8 @@ export class CreateAndUpdateAttendanceInput {
 }
 
 @InputType()
-export class UpdateAttendancesInput {
+export class UpdateSchedulesInput {
   // @Field((_type) => [AnswerInput], { nullable: true })
-  @Field((_type) => [CreateAndUpdateAttendanceInput], { nullable: true })
-  attendances: CreateAndUpdateAttendanceInput[];
+  @Field((_type) => [CreateAndUpdateScheduleInput], { nullable: true })
+  Schedules: CreateAndUpdateScheduleInput[];
 }

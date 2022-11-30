@@ -18,8 +18,8 @@ import { QuestionModule } from './collection/question/question.module';
 import { Question } from './collection/question/question.entity';
 import { ExamModule } from './collection/exam/exam.module';
 import { Exam } from './collection/exam/exam.entity';
-import { Attendance } from './collection/attendance/attendance.entity';
-import { AttendanceModule } from './collection/attendance/attendance.module';
+import { Schedule } from './collection/Schedule/Schedule.entity';
+import { ScheduleModule } from './collection/Schedule/Schedule.module';
 import { AssignmentModule } from './collection/assignment/assignment.module';
 import { Assignment } from './collection/assignment/assignment.entity';
 import { ExamClassModule } from './collection/exam-class/exam-class.module';
@@ -44,7 +44,7 @@ import { ColumnScoreModule } from './collection/columnScore/columnScore.module';
         Tag,
         Media,
         Question,
-        Attendance,
+        Schedule,
         Exam,
         ExamClass,
         Assignment,
@@ -70,7 +70,7 @@ import { ColumnScoreModule } from './collection/columnScore/columnScore.module';
     MediaModule,
     QuestionModule,
     ExamModule,
-    AttendanceModule,
+    ScheduleModule,
     AssignmentModule,
     ExamClassModule,
     ColumnScoreModule,
