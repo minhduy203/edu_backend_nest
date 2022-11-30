@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from '../user/user.service';
 import { AttendanceClassInput } from './attendance.input';
 import { AttendanceService } from './attendance.service';
@@ -11,12 +11,13 @@ export class AttendanceResolver {
     private userService: UserService,
   ) {}
 
-  // @Query((_returns) => [AttendanceType])
-  // async getAttendanceByClass(@Args('id') id: string) {
-  //   const Attendances = await this.AttendanceService.getAttendanceByIdClass(id);
-
-  //   return Attendances;
-  // }
+  @Query((_returns) => [AttendanceType])
+  async getAttendanceToday(@Args('class_id') class_id: string) {
+    const Attendances = await this.AttendanceService.getAttendanceToday(
+      class_id,
+    );
+    return Attendances;
+  }
 
   @Mutation((_returns) => Boolean)
   async updateAttendances(

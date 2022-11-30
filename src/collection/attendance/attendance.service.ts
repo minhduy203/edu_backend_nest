@@ -5,12 +5,15 @@ import { User } from '../user/user.entity';
 import { Attendance } from './attendance.entity';
 import { AttendanceClassInput } from './attendance.input';
 import { v4 as uuid } from 'uuid';
+import { Schedule } from '../schedule/schedule.entity';
 
 @Injectable()
 export class AttendanceService {
   constructor(
     @InjectRepository(Attendance)
     private AttendanceRepository: Repository<Attendance>,
+    @InjectRepository(Schedule)
+    private ScheduleRepository: Repository<Schedule>,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
@@ -66,15 +69,33 @@ export class AttendanceService {
     return true;
   }
 
-  // async getAttendanceByIdClass(class_id: string) {
-  //   const AttendanceOfClasses = await this.AttendanceRepository.find({
-  //     where: {
-  //       class_id,
-  //     },
-  //   });
+  async getAttendanceToday(class_id: string) {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    let mm: any = today.getMonth() + 1; // Months start at 0!
+    let dd: any = today.getDate();
 
-  //   return AttendanceOfClasses;
-  // }
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+
+    const formattedToday = dd + '-' + mm + '-' + yyyy;
+
+    const scheduleToDay = await this.ScheduleRepository.findOneBy({
+      class_id,
+      learn_date: formattedToday,
+    });
+
+    if (scheduleToDay) {
+      const AttendanceOfClasses = await this.AttendanceRepository.find({
+        where: {
+          schedule_id: scheduleToDay.id,
+        },
+      });
+      return AttendanceOfClasses;
+    } else {
+      throw new Error('Hôm nay không có lịch học');
+    }
+  }
 
   // async createAttendance(createAttendanceInput: CreateAttendanceInput) {
   //   const { class_id, content, is_learn_date, learn_date } =

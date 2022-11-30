@@ -9,16 +9,16 @@ export class AttendanceType {
   id: string;
 
   @Field()
-  content: string;
+  user_id: string;
 
   @Field()
-  learn_date: string;
+  schedule_id: string;
 
   @Field()
-  class_id: string;
+  note: string;
 
   @Field()
-  is_learn_date: boolean;
+  is_present: boolean;
 
   @Field()
   createdAt: Date;
