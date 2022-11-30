@@ -6,20 +6,20 @@ import {
   UpdateSchedulesInput,
 } from './schedule.input';
 import { ScheduleService } from './schedule.service';
-import { ScheduleType } from './schedule';
+import { ScheduleType } from './schedule.type';
 
 @Resolver((_of) => ScheduleType)
 export class ScheduleResolver {
   constructor(
-    private ScheduleService: ScheduleService,
+    private scheduleService: ScheduleService,
     private userService: UserService,
   ) {}
 
   @Query((_returns) => [ScheduleType])
   async getScheduleByClass(@Args('id') id: string) {
-    const Schedules = await this.ScheduleService.getScheduleByIdClass(id);
+    const schedules = await this.scheduleService.getScheduleByIdClass(id);
 
-    return Schedules;
+    return schedules;
   }
 
   @Mutation((_returns) => Boolean)
@@ -28,7 +28,7 @@ export class ScheduleResolver {
     updateSchedulesInput: UpdateSchedulesInput,
     @Args('class_id') class_id: string,
   ) {
-    const attandances = await this.ScheduleService.updateScheduleMany(
+    const attandances = await this.scheduleService.updateScheduleMany(
       updateSchedulesInput,
       class_id,
     );
@@ -39,14 +39,14 @@ export class ScheduleResolver {
   createSchedule(
     @Args('createScheduleInput') createScheduleInput: CreateScheduleInput,
   ) {
-    return this.ScheduleService.createSchedule(createScheduleInput);
+    return this.scheduleService.createSchedule(createScheduleInput);
   }
 
   @Mutation((_return) => ScheduleType)
   updateSchedule(
     @Args('updateScheduleInput') updateScheduleInput: UpdateScheduleInput,
   ) {
-    return this.ScheduleService.updateSchedule(updateScheduleInput);
+    return this.scheduleService.updateSchedule(updateScheduleInput);
   }
 
   // @Mutation((_returns) => Boolean)

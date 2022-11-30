@@ -18,14 +18,16 @@ import { QuestionModule } from './collection/question/question.module';
 import { Question } from './collection/question/question.entity';
 import { ExamModule } from './collection/exam/exam.module';
 import { Exam } from './collection/exam/exam.entity';
-import { Schedule } from './collection/Schedule/Schedule.entity';
-import { ScheduleModule } from './collection/Schedule/Schedule.module';
+import { Schedule } from './collection/schedule/schedule.entity';
+import { ScheduleModule } from './collection/schedule/schedule.module';
 import { AssignmentModule } from './collection/assignment/assignment.module';
 import { Assignment } from './collection/assignment/assignment.entity';
 import { ExamClassModule } from './collection/exam-class/exam-class.module';
 import { ExamClass } from './collection/exam-class/exam-class.entity';
 import { ColumnScore } from './collection/columnScore/columnScore.entity';
 import { ColumnScoreModule } from './collection/columnScore/columnScore.module';
+import { Attendance } from './collection/attendance/attendance.entity';
+import { AttendanceModule } from './collection/attendance/attendance.module';
 
 @Module({
   imports: [
@@ -49,6 +51,7 @@ import { ColumnScoreModule } from './collection/columnScore/columnScore.module';
         ExamClass,
         Assignment,
         ColumnScore,
+        Attendance,
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -74,6 +77,7 @@ import { ColumnScoreModule } from './collection/columnScore/columnScore.module';
     AssignmentModule,
     ExamClassModule,
     ColumnScoreModule,
+    AttendanceModule,
   ],
   providers: [
     {

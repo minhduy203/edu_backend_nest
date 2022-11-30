@@ -21,7 +21,7 @@ export class ColumnScore {
   class_id: string;
 
   @Column()
-  exam_id: string;
+  examOfClass_id: string;
 
   @Column()
   scores: object;

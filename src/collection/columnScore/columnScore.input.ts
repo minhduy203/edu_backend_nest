@@ -17,7 +17,7 @@ export class CreateColumnScoreInput {
   class_id: string;
 
   @Field({ nullable: true })
-  exam_id: string;
+  examOfClass_id: string;
 
   @Field({ nullable: true })
   reference_col: string;

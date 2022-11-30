@@ -29,7 +29,7 @@ export class ColumnScoreService {
   }
 
   async createColumnScore(createColumnScoreInput: CreateColumnScoreInput) {
-    const { class_id, multiplier, name, type, note, exam_id } =
+    const { class_id, multiplier, name, type, note, examOfClass_id } =
       createColumnScoreInput;
 
     const newAttendance = await this.columnScoreRepository.create({
@@ -39,7 +39,7 @@ export class ColumnScoreService {
       name,
       type,
       note,
-      exam_id,
+      examOfClass_id,
     });
 
     await this.columnScoreRepository.save(newAttendance);
