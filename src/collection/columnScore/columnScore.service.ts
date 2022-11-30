@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { v4 as uuid } from 'uuid';
 import { User } from '../user/user.entity';
 import { ColumnScore } from './columnScore.entity';
 import {
   CreateColumnScoreInput,
   UpdateColumnScoreInput,
-  UpdateColumnScoresInput,
+  UpdateTableScoreInput,
 } from './columnScore.input';
-import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class ColumnScoreService {
@@ -29,7 +29,7 @@ export class ColumnScoreService {
   }
 
   async createColumnScore(createColumnScoreInput: CreateColumnScoreInput) {
-    const { class_id, multiplier, name, type, note, examOfClass_id } =
+    const { class_id, multiplier, name, type, note, exam_id } =
       createColumnScoreInput;
 
     const newAttendance = await this.columnScoreRepository.create({
@@ -39,7 +39,7 @@ export class ColumnScoreService {
       name,
       type,
       note,
-      examOfClass_id,
+      exam_id,
     });
 
     await this.columnScoreRepository.save(newAttendance);
@@ -65,14 +65,27 @@ export class ColumnScoreService {
     return await this.columnScoreRepository.save(attendance);
   }
 
-  async updateColumnScores(
-    updateColumnScoresInput: UpdateColumnScoresInput,
-    id: string,
+  async updateTableScore(
+    updateColumnScoresInput: UpdateTableScoreInput,
+    class_id: string,
   ) {
     const { columnScores } = updateColumnScoresInput;
 
-    console.log('columnScores', columnScores);
+    const columnScoresOfClass = await this.columnScoreRepository.find({
+      where: {
+        class_id,
+      },
+    });
 
+    columnScoresOfClass.forEach((colScoreOfClass) => {
+      const data = columnScores.find((colScore) => {
+        return colScore.id === colScoreOfClass.id;
+      });
+
+      colScoreOfClass.scores = data?.scores;
+    });
+
+    await this.columnScoreRepository.save(columnScoresOfClass);
     return true;
     // return await this.columnScoreRepository.save(attendance);
   }

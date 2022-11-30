@@ -17,7 +17,10 @@ export class CreateColumnScoreInput {
   class_id: string;
 
   @Field({ nullable: true })
-  examOfClass_id: string;
+  exam_id: string;
+
+  @Field({ nullable: true })
+  reference_col: string;
 
   @Field({ nullable: true })
   note: string;
@@ -48,7 +51,7 @@ export class UpdatScoresInColumnInput {
 }
 
 @InputType()
-export class UpdateColumnScoresInput {
+export class UpdateTableScoreInput {
   // @Field((_type) => [AnswerInput], { nullable: true })
   @Field((_type) => [UpdatScoresInColumnInput], { nullable: true })
   columnScores: UpdatScoresInColumnInput[];

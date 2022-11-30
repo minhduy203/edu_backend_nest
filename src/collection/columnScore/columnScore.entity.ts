@@ -21,7 +21,7 @@ export class ColumnScore {
   class_id: string;
 
   @Column()
-  examOfClass_id: string;
+  exam_id: string;
 
   @Column()
   scores: object;
@@ -31,6 +31,9 @@ export class ColumnScore {
 
   @Column()
   note: string;
+
+  @Column()
+  reference_col?: string;
 
   @Column({
     type: 'enum',

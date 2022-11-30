@@ -4,7 +4,7 @@ import { UserService } from '../user/user.service';
 import {
   CreateColumnScoreInput,
   UpdateColumnScoreInput,
-  UpdateColumnScoresInput,
+  UpdateTableScoreInput,
 } from './columnScore.input';
 import { ColumnScoreService } from './columnScore.service';
 import { ColumnScoreType } from './columnScore.type.';
@@ -59,16 +59,15 @@ export class ColumnScoreResolver {
   }
 
   @Mutation((_return) => Boolean)
-  updateColumnScores(
-    @Args('updateColumnScoresInput')
-    updateColumnScoresInput: UpdateColumnScoresInput,
+  updateTableScore(
+    @Args('updateTableScoreInput')
+    updateTableScoreInput: UpdateTableScoreInput,
+    @Args('class_id') class_id: string,
   ) {
-    // return this.columnScoreService.updateColumnScores(
-    //   updateColumnScoresInput,
-    //   id,
-    // );
-    console.log('updateColumnScoresInput', updateColumnScoresInput);
-    return true;
+    return this.columnScoreService.updateTableScore(
+      updateTableScoreInput,
+      class_id,
+    );
   }
 
   @Mutation((_returns) => Boolean)
