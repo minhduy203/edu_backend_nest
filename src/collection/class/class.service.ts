@@ -44,8 +44,8 @@ export class ClassService {
       studentAmount,
       scoreFactor,
       code: uuid(),
-      students,
-      teachers,
+      students: students || null,
+      teachers: teachers || null,
     });
 
     await this.classRepository.save(classRoom);

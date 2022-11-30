@@ -14,11 +14,17 @@ export class CreateClassInput {
   @Field()
   scoreFactor: number;
 
-  @Field((_type) => [ID], { defaultValue: [] })
+  @Field((_type) => [ID], { nullable: true })
   students: string[];
 
-  @Field((_type) => [ID], { defaultValue: [] })
+  @Field((_type) => [ID], { nullable: true })
   teachers: string[];
+
+  @Field({ nullable: true })
+  end_date: Date;
+
+  @Field({ nullable: true })
+  from_date: Date;
 }
 
 @InputType()
@@ -31,6 +37,12 @@ export class UpdateClassInput {
 
   @Field({ nullable: true })
   scoreFactor: number;
+
+  @Field({ nullable: true })
+  end_date: Date;
+
+  @Field({ nullable: true })
+  from_date: Date;
 }
 
 @InputType()
