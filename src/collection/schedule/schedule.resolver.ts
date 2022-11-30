@@ -22,6 +22,19 @@ export class ScheduleResolver {
     return schedules;
   }
 
+  @Query((_returns) => ScheduleType)
+  async getScheduleByLearnDate(
+    @Args('learn_date') learn_date: string,
+    @Args('class_id') class_id: string,
+  ) {
+    const schedules = await this.scheduleService.getScheduleByLearnDate(
+      learn_date,
+      class_id,
+    );
+
+    return schedules;
+  }
+
   @Mutation((_returns) => Boolean)
   async updateSchedules(
     @Args('updateSchedulesInput')

@@ -26,7 +26,7 @@ export class Schedule {
   is_learn_date: boolean;
 
   @Column()
-  learn_date?: Date;
+  learn_date?: string;
 
   @CreateDateColumn()
   createdAt?: Date;

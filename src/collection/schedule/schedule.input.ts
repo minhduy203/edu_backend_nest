@@ -6,7 +6,7 @@ export class CreateScheduleInput {
   content: string;
 
   @Field()
-  learn_date: Date;
+  learn_date: string;
 
   @Field()
   class_id: string;

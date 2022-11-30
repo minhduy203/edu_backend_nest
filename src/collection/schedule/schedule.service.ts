@@ -34,6 +34,15 @@ export class ScheduleService {
     return scheduleOfClasses;
   }
 
+  async getScheduleByLearnDate(learn_date: string, class_id: string) {
+    const schedule = await this.scheduleRepository.findOneBy({
+      learn_date,
+      class_id,
+    });
+
+    return schedule;
+  }
+
   async createSchedule(createScheduleInput: CreateScheduleInput) {
     const { class_id, content, is_learn_date, learn_date } =
       createScheduleInput;
