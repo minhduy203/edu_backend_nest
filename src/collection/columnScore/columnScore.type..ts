@@ -25,8 +25,11 @@ export class ColumnScoreType {
   @Field(() => GraphQLJSONObject, { nullable: true })
   scores: object;
 
-  @Field()
+  @Field({ nullable: true })
   examOfClass_id: string;
+
+  @Field({ nullable: true })
+  reference_col: string;
 
   @Field()
   multiplier: number;

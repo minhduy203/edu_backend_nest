@@ -39,6 +39,12 @@ export class UpdateColumnScoreInput {
 
   @Field((_type) => ScoreType)
   type: ScoreType;
+
+  @Field({ nullable: true })
+  examOfClass_id: string;
+
+  @Field({ nullable: true })
+  reference_col: string;
 }
 
 @InputType()

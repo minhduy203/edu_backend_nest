@@ -41,6 +41,15 @@ export class ClassResolver {
     return classes;
   }
 
+  @Query((_returns) => [ClassType])
+  async getMyClassStudent(@GetCurrentUser() user: JwtPayload) {
+    const { sub } = user;
+
+    const classes = await this.classService.getClassOfStudent(sub);
+
+    return classes;
+  }
+
   @Query((_returns) => ClassType)
   getClassById(@Args('id') id: string) {
     return this.classService.getClassById(id);
@@ -73,7 +82,7 @@ export class ClassResolver {
   ) {
     const { sub } = user;
 
-    console.log("sub", sub)
+    console.log('sub', sub);
     const classInfo = await this.classService.getClassById(id);
 
     if (classInfo.owner === sub) {
