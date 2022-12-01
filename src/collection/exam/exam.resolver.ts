@@ -6,6 +6,8 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { GetCurrentUser } from 'src/common/decorators';
+import { JwtPayload } from 'src/type';
 import { QuestionService } from '../question/question.service';
 import { TagService } from '../tag/tag.service';
 import { Exam } from './exam.entity';
@@ -31,9 +33,19 @@ export class ExamResolver {
     return this.examService.getExamById(id);
   }
 
+  @Query((_returns) => ExamType)
+  getMyExam(@GetCurrentUser() user: JwtPayload) {
+    const { sub } = user;
+    return this.examService.getMyExam(sub);
+  }
+
   @Mutation((_returns) => ExamType)
-  createExam(@Args('createExamInput') createExamInput: CreateExamInput) {
-    return this.examService.createExam(createExamInput);
+  createExam(
+    @GetCurrentUser() user: JwtPayload,
+    @Args('createExamInput') createExamInput: CreateExamInput,
+  ) {
+    const { sub } = user;
+    return this.examService.createExam(createExamInput, sub);
   }
 
   @Mutation((_returns) => ExamType)

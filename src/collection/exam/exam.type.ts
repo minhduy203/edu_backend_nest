@@ -17,6 +17,9 @@ export class ExamType {
   @Field((_type) => [QuestionType])
   questions: string[];
 
+  @Field()
+  owner_id: string;
+
   @Field((_type) => [TagType], { nullable: true })
   tags: string[];
 

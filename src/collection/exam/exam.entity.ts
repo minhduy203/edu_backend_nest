@@ -25,6 +25,9 @@ export class Exam {
   @Column()
   tags: string[];
 
+  @Column()
+  owner_id: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -40,6 +40,7 @@ export class AuthService {
       role,
       email,
       password: hashedPassword,
+      token_version: 0,
     });
     const newUser = await this.userRepository.save(user);
 
