@@ -47,6 +47,11 @@ export class QuestionResolver {
     return this.questionService.updateQuestion(updateQuestionInput, id);
   }
 
+  @Query((_returns) => [QuestionType])
+  getMyQuestions(@Args('id') id: string) {
+    return this.questionService.getMyQuestion(id);
+  }
+
   @Mutation((_returns) => Boolean)
   deleteQuestion(@Args('id') id: string) {
     return this.questionService.deleteQuestion(id);

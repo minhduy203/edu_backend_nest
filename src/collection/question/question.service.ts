@@ -82,4 +82,13 @@ export class QuestionService {
     }
     return null;
   }
+
+  async getMyQuestion(id: string): Promise<Question[]> {
+    const questions = await this.questionRepository.find({
+      where: {
+        owner: id,
+      },
+    });
+    return questions;
+  }
 }
