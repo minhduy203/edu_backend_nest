@@ -33,7 +33,7 @@ export class ExamResolver {
     return this.examService.getExamById(id);
   }
 
-  @Query((_returns) => ExamType)
+  @Query((_returns) => [ExamType])
   getMyExam(@GetCurrentUser() user: JwtPayload) {
     const { sub } = user;
     return this.examService.getMyExam(sub);
