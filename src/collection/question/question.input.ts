@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateQuestionInput {
@@ -10,6 +10,9 @@ export class CreateQuestionInput {
 
   @Field((_type) => [AnswerInput])
   correctAnswer: AnswerInput[];
+
+  @Field((_type) => [ID], { nullable: true })
+  tags: string[];
 }
 
 @InputType()

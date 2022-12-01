@@ -9,11 +9,7 @@ import { ExamResolver } from './exam.resolver';
 import { ExamService } from './exam.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Exam]),
-    QuestionModule,
-    TagModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Exam]), QuestionModule, TagModule],
   providers: [ExamService, ExamResolver],
   exports: [ExamService],
 })

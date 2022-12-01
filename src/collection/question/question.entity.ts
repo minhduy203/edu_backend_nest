@@ -28,6 +28,9 @@ export class Question {
   @Column()
   isMultiple: boolean;
 
+  @Column()
+  tags: string[];
+
   @Column((_type) => Answer)
   correctAnswer: Answer[];
 

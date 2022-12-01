@@ -16,6 +16,14 @@ export class QuestionService {
     return this.questionRepository.find();
   }
 
+  async getMyQuestion(owner_id): Promise<Question[]> {
+    return this.questionRepository.find({
+      where: {
+        owner: owner_id,
+      },
+    });
+  }
+
   async getQuestionById(id: string): Promise<Question> {
     return this.questionRepository.findOneBy({ id });
   }
@@ -24,7 +32,7 @@ export class QuestionService {
     createQuestionInput: CreateQuestionInput,
     owner: string,
   ): Promise<Question> {
-    const { question, isMultiple, correctAnswer } = createQuestionInput;
+    const { question, isMultiple, correctAnswer, tags } = createQuestionInput;
     const answers = [];
     correctAnswer.forEach((item) => answers.push(item.text));
     const data = {
@@ -34,6 +42,7 @@ export class QuestionService {
       answers,
       isMultiple,
       correctAnswer,
+      tags,
       createdAt: new Date(),
     };
     const result = this.questionRepository.create(data);
