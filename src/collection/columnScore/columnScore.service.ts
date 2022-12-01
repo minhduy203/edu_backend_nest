@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ScoreType } from 'src/type/ScoreType';
 import { Repository } from 'typeorm';
+import { v4 as uuid } from 'uuid';
+import { Class } from '../class/class.entity';
 import { User } from '../user/user.entity';
 import { ColumnScore } from './columnScore.entity';
 import {
   CreateColumnScoreInput,
   UpdateColumnScoreInput,
+  UpdateTableScoreInput,
 } from './columnScore.input';
-import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class ColumnScoreService {
@@ -15,6 +18,7 @@ export class ColumnScoreService {
     @InjectRepository(ColumnScore)
     private columnScoreRepository: Repository<ColumnScore>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Class) private classRepository: Repository<Class>,
   ) {}
 
   async getColumnScoresByIdClass(class_id: string) {
@@ -31,26 +35,41 @@ export class ColumnScoreService {
     const { class_id, multiplier, name, type, note, examOfClass_id } =
       createColumnScoreInput;
 
-    const newAttendance = await this.columnScoreRepository.create({
+    const scores = {};
+
+    // Trường hợp là điểm cộng hoặc điểm trừ sẽ cho giá trị mặc định là 0
+    if (type === ScoreType.PLUS || type === ScoreType.MINUS) {
+      const classInfo = await this.classRepository.findOneBy({
+        id: class_id,
+      });
+
+      classInfo.students.forEach((student_id) => {
+        scores[student_id] = 0;
+      });
+    }
+
+    const newColumnScore = await this.columnScoreRepository.create({
       id: uuid(),
       class_id,
       multiplier,
       name,
       type,
       note,
+      scores,
       examOfClass_id,
     });
 
-    await this.columnScoreRepository.save(newAttendance);
+    await this.columnScoreRepository.save(newColumnScore);
 
-    return newAttendance;
+    return newColumnScore;
   }
 
   async updateColumnScore(
     updateAttendanceInput: UpdateColumnScoreInput,
     id: string,
   ) {
-    const { multiplier, name, note, type } = updateAttendanceInput;
+    const { multiplier, name, note, type, examOfClass_id, reference_col } =
+      updateAttendanceInput;
 
     const attendance = await this.columnScoreRepository.findOneBy({
       id,
@@ -60,8 +79,35 @@ export class ColumnScoreService {
     name && (attendance.name = name);
     note && (attendance.note = note);
     type && (attendance.type = type);
+    examOfClass_id && (attendance.examOfClass_id = examOfClass_id);
+    reference_col && (attendance.reference_col = reference_col);
 
     return await this.columnScoreRepository.save(attendance);
+  }
+
+  async updateTableScore(
+    updateColumnScoresInput: UpdateTableScoreInput,
+    class_id: string,
+  ) {
+    const { columnScores } = updateColumnScoresInput;
+
+    const columnScoresOfClass = await this.columnScoreRepository.find({
+      where: {
+        class_id,
+      },
+    });
+
+    columnScoresOfClass.forEach((colScoreOfClass) => {
+      const data = columnScores.find((colScore) => {
+        return colScore.id === colScoreOfClass.id;
+      });
+
+      colScoreOfClass.scores = data?.scores;
+    });
+
+    await this.columnScoreRepository.save(columnScoresOfClass);
+    return true;
+    // return await this.columnScoreRepository.save(attendance);
   }
 
   // async updateAttendanceMany(

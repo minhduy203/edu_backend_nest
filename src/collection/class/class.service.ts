@@ -31,6 +31,22 @@ export class ClassService {
     });
   }
 
+  async getClassOfStudent(idStudent: string): Promise<Class[]> {
+    const user = await this.userRepository.findOneBy({
+      id: idStudent,
+    });
+
+    if (user.classes) {
+      return this.classRepository.find({
+        where: {
+          id: {
+            $in: user.classes,
+          } as any,
+        },
+      });
+    }
+  }
+
   async createClass(
     createClassInput: CreateClassInput,
     owner: string,

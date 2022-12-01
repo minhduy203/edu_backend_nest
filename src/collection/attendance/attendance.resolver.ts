@@ -1,53 +1,50 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from '../user/user.service';
-import {
-  CreateAttendanceInput,
-  UpdateAttendanceInput,
-  UpdateAttendancesInput,
-} from './attendance.input';
+import { AttendanceClassInput } from './attendance.input';
 import { AttendanceService } from './attendance.service';
-import { AttendanceType } from './attendance.type.';
+import { AttendanceType } from './attendance.type';
 
 @Resolver((_of) => AttendanceType)
 export class AttendanceResolver {
   constructor(
-    private attendanceService: AttendanceService,
+    private AttendanceService: AttendanceService,
     private userService: UserService,
   ) {}
 
   @Query((_returns) => [AttendanceType])
-  async getAttendanceByClass(@Args('id') id: string) {
-    const attendances = await this.attendanceService.getAttendanceByIdClass(id);
-
-    return attendances;
+  async getAttendanceToday(@Args('class_id') class_id: string) {
+    const Attendances = await this.AttendanceService.getAttendanceToday(
+      class_id,
+    );
+    return Attendances;
   }
 
   @Mutation((_returns) => Boolean)
   async updateAttendances(
-    @Args('updateAttendancesInput')
-    updateAttendancesInput: UpdateAttendancesInput,
-    @Args('class_id') class_id: string,
+    @Args('attendanceClassInput')
+    attendancesInput: AttendanceClassInput,
+    @Args('schedule_id') schedule_id: string,
   ) {
-    const attandances = await this.attendanceService.updateAttendanceMany(
-      updateAttendancesInput,
-      class_id,
+    const attandances = await this.AttendanceService.attendanceClass(
+      attendancesInput,
+      schedule_id,
     );
     return attandances;
   }
 
-  @Mutation((_returns) => AttendanceType)
-  createAttendance(
-    @Args('createAttendanceInput') createAttendanceInput: CreateAttendanceInput,
-  ) {
-    return this.attendanceService.createAttendance(createAttendanceInput);
-  }
+  // @Mutation((_returns) => AttendanceType)
+  // createAttendance(
+  //   @Args('createAttendanceInput') createAttendanceInput: CreateAttendanceInput,
+  // ) {
+  //   return this.AttendanceService.createAttendance(createAttendanceInput);
+  // }
 
-  @Mutation((_return) => AttendanceType)
-  updateAttendance(
-    @Args('updateAttendanceInput') updateAttendanceInput: UpdateAttendanceInput,
-  ) {
-    return this.attendanceService.updateAttendance(updateAttendanceInput);
-  }
+  // @Mutation((_return) => AttendanceType)
+  // updateAttendance(
+  //   @Args('updateAttendanceInput') updateAttendanceInput: UpdateAttendanceInput,
+  // ) {
+  //   return this.AttendanceService.updateAttendance(updateAttendanceInput);
+  // }
 
   // @Mutation((_returns) => Boolean)
   // async deleteAttandance(@Args('deleteAttandance') id: string, @GetCurrentUser() user) {

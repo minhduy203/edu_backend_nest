@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { GraphQLJSONObject } from 'graphql-type-json';
 import { ScoreType } from 'src/type/ScoreType';
 
 @InputType()
@@ -19,6 +20,9 @@ export class CreateColumnScoreInput {
   examOfClass_id: string;
 
   @Field({ nullable: true })
+  reference_col: string;
+
+  @Field({ nullable: true })
   note: string;
 }
 
@@ -35,6 +39,28 @@ export class UpdateColumnScoreInput {
 
   @Field((_type) => ScoreType)
   type: ScoreType;
+
+  @Field({ nullable: true })
+  examOfClass_id: string;
+
+  @Field({ nullable: true })
+  reference_col: string;
+}
+
+@InputType()
+export class UpdatScoresInColumnInput {
+  @Field()
+  id: string;
+
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  scores: object;
+}
+
+@InputType()
+export class UpdateTableScoreInput {
+  // @Field((_type) => [AnswerInput], { nullable: true })
+  @Field((_type) => [UpdatScoresInColumnInput], { nullable: true })
+  columnScores: UpdatScoresInColumnInput[];
 }
 
 // @InputType()

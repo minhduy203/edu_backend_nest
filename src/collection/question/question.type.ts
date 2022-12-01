@@ -19,12 +19,12 @@ export class QuestionType {
   answers: string[];
 
   @Field()
-  isMutiple: boolean;
+  isMultiple: boolean;
 
   @Field((_type) => [AnswerType])
   correctAnswer: AnswerType[];
 
-  @Field()
+  @Field({ nullable: true })
   createdAt: Date;
 
   @Field()

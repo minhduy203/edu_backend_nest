@@ -32,6 +32,9 @@ export class ColumnScore {
   @Column()
   note: string;
 
+  @Column()
+  reference_col?: string;
+
   @Column({
     type: 'enum',
     enum: ScoreType,

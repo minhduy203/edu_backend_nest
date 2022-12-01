@@ -34,6 +34,7 @@ export class QuestionService {
       answers,
       isMultiple,
       correctAnswer,
+      createdAt: new Date(),
     };
     const result = this.questionRepository.create(data);
     await this.questionRepository.insert(data);

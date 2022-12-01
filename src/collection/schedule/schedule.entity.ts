@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Attendance {
+export class Schedule {
   @ObjectIdColumn()
   _id: ObjectID;
 
@@ -17,16 +17,16 @@ export class Attendance {
   id: string;
 
   @Column()
-  note: string;
+  content: string;
 
   @Column()
-  user_id: string;
+  class_id: string;
 
   @Column()
-  schedule_id: string;
+  is_learn_date: boolean;
 
   @Column()
-  is_present: boolean;
+  learn_date?: string;
 
   @CreateDateColumn()
   createdAt?: Date;
