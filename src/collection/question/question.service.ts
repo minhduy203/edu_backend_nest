@@ -69,14 +69,17 @@ export class QuestionService {
   }
 
   async getManyQuestions(questionIds: string[]): Promise<Question[]> {
-    const questionList = await this.questionRepository.find({
-      where: {
-        id: {
-          $in: questionIds,
-        } as any,
-      },
-    });
+    if (questionIds) {
+      const questionList = await this.questionRepository.find({
+        where: {
+          id: {
+            $in: questionIds,
+          } as any,
+        },
+      });
 
-    return questionList;
+      return questionList;
+    }
+    return null;
   }
 }

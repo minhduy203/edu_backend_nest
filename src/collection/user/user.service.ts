@@ -51,8 +51,6 @@ export class UserService {
       token_version: 0,
     });
 
-    console.log("newUser", newUser)
-
     await this.userRepository.save(newUser);
     return newUser;
   }
@@ -86,27 +84,33 @@ export class UserService {
   }
 
   async getManyUsers(userIds: string[]): Promise<User[]> {
-    const studentsList = await this.userRepository.find({
-      where: {
-        id: {
-          $in: userIds,
-        } as any,
-      },
-    });
+    if (userIds) {
+      const studentsList = await this.userRepository.find({
+        where: {
+          id: {
+            $in: userIds,
+          } as any,
+        },
+      });
 
-    return studentsList;
+      return studentsList;
+    }
+    return null;
   }
 
   async getManyClasses(classIds: string[]): Promise<Class[]> {
-    const classList = await this.classRepository.find({
-      where: {
-        id: {
-          $in: classIds,
-        } as any,
-      },
-    });
+    if (classIds) {
+      const classList = await this.classRepository.find({
+        where: {
+          id: {
+            $in: classIds,
+          } as any,
+        },
+      });
 
-    return classList;
+      return classList;
+    }
+    return null;
   }
 
   async updateProfile(id: string, profile: UpdateProfileInput): Promise<User> {
