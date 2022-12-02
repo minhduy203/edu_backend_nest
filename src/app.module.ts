@@ -28,6 +28,8 @@ import { ColumnScore } from './collection/columnScore/columnScore.entity';
 import { ColumnScoreModule } from './collection/columnScore/columnScore.module';
 import { Attendance } from './collection/attendance/attendance.entity';
 import { AttendanceModule } from './collection/attendance/attendance.module';
+import { GroupModule } from './collection/group/group.module';
+import { Group } from './collection/group/group.entity';
 
 @Module({
   imports: [
@@ -52,6 +54,7 @@ import { AttendanceModule } from './collection/attendance/attendance.module';
         Assignment,
         ColumnScore,
         Attendance,
+        Group
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -78,6 +81,7 @@ import { AttendanceModule } from './collection/attendance/attendance.module';
     ExamClassModule,
     ColumnScoreModule,
     AttendanceModule,
+    GroupModule,
   ],
   providers: [
     {

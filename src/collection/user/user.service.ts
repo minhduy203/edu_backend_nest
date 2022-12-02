@@ -44,7 +44,7 @@ export class UserService {
       password,
       role,
       address,
-      classes: [],
+      classes: classes || null,
       lastName,
       firstName,
       phoneNumber,

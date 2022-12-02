@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { QuestionType } from '../question/question.type';
-import { ClassType } from '../class/class.type';
 import { TagType } from '../tag/tag.type.';
 
 @ObjectType()
