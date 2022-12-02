@@ -72,7 +72,15 @@ export class ClassService {
     owner: string,
     createClassInput: CreateMyClassInput,
   ): Promise<Class> {
-    const { name, scoreFactor, avatar, end_date, from_date } = createClassInput;
+    const {
+      name,
+      scoreFactor,
+      avatar,
+      end_date,
+      from_date,
+      students,
+      teachers,
+    } = createClassInput;
     const classRoom = this.classRepository.create({
       id: uuid(),
       name,
@@ -81,8 +89,8 @@ export class ClassService {
       end_date,
       from_date,
       scoreFactor,
-      // students: [],
-      // teachers: [],
+      students: students || null,
+      teachers: teachers || null,
       code: uuid(),
     });
 
@@ -150,24 +158,16 @@ export class ClassService {
   ): Promise<Class> {
     const classRoom = await this.classRepository.findOneBy({ id: classId });
 
-    classRoom.students = [...(classRoom?.students || []), ...studentIds];
+    for (const student of studentIds) {
+      if (this.checkExistUser(student, classRoom.students)) {
+        throw new Error(`Class had student ${student}`);
+      }
+      classRoom.students.push(student);
+    }
 
     for (const userId of studentIds) {
       const user = await this.userRepository.findOneBy({ id: userId });
       user.classes.push(classId);
-      this.userRepository.save(user);
-    }
-
-    const userList = await this.userRepository.find({
-      where: {
-        id: {
-          $in: studentIds,
-        } as any,
-      },
-    });
-
-    for (const user of userList) {
-      user.classes = [...user.classes, classId];
       this.userRepository.save(user);
     }
 
@@ -180,7 +180,24 @@ export class ClassService {
   ): Promise<Class> {
     const classRoom = await this.classRepository.findOneBy({ id: classId });
 
-    classRoom.teachers = [...classRoom.teachers, ...teachersIds];
+    for (const teacher of teachersIds) {
+      if (this.checkExistUser(teacher, classRoom.teachers)) {
+        throw new Error(`Class had teacher ${teacher}`);
+      }
+      classRoom.teachers.push(teacher);
+    }
+
+    for (const userId of teachersIds) {
+      const user = await this.userRepository.findOneBy({ id: userId });
+      user.classes.push(classId);
+      this.userRepository.save(user);
+    }
+
     return this.classRepository.save(classRoom);
+  }
+
+  checkExistUser<T>(id: T, ids: T[]) {
+    if (ids.includes(id)) return true;
+    return false;
   }
 }

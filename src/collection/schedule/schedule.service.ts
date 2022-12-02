@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { User } from '../user/user.entity';
-import { Schedule } from './Schedule.entity';
+import { Schedule } from './schedule.entity';
 
 import {
   CreateScheduleInput,

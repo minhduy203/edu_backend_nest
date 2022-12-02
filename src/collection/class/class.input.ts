@@ -85,4 +85,10 @@ export class CreateMyClassInput {
 
   @Field()
   avatar: string;
+
+  @Field((_type) => [ID], { nullable: true })
+  students: string[];
+
+  @Field((_type) => [ID], { nullable: true })
+  teachers: string[];
 }
