@@ -8,7 +8,7 @@ export class CreateGroupInput {
   @Field((_type) => [ID])
   students: string[];
 
-  @Field()
+  @Field({ nullable: true })
   name: string;
 }
 

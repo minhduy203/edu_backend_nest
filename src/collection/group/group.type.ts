@@ -16,7 +16,7 @@ export class GroupType {
   @Field((_type) => [UserType])
   students: string[];
 
-  @Field()
+  @Field({ nullable: true })
   name: string;
 
   @Field()

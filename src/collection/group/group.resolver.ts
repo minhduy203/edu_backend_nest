@@ -7,8 +7,6 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { ClassService } from '../class/class.service';
-import { QuestionService } from '../question/question.service';
-import { TagService } from '../tag/tag.service';
 import { UserService } from '../user/user.service';
 import { Group } from './group.entity';
 import { CreateGroupInput, UpdateGroupInput } from './group.input';
@@ -43,7 +41,7 @@ export class GroupResolver {
     return this.groupService.createGroup(createGroupInput);
   }
 
-  @Mutation((_returns) => GroupType)
+  @Mutation((_returns) => [GroupType])
   createAutoGroup(
     @Args('classId') classId: string,
     @Args('groupAmount') groupAmount: number,

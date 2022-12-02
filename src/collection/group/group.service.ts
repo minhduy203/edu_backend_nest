@@ -27,8 +27,8 @@ export class GroupService {
     const { name, classRoom, students } = createGroupInput;
     const data = {
       id: uuid(),
-      name,
-      classRoom,
+      name: name || null,
+      class: classRoom,
       students,
     };
     const result = this.groupRepository.create(data);
@@ -74,21 +74,32 @@ export class GroupService {
   ): Promise<Group[]> {
     const classRoom = await this.classRepository.findOneBy({ id: classId });
     const studentsId = classRoom.students;
-    const studentAmount = Math.floor(studentsId.length / groupAmount) + 1;
-
-    // shuffle studentsId
-    for (let i = studentsId.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [studentsId[i], studentsId[j]] = [studentsId[j], studentsId[i]];
+    let resultArr = [];
+    for (let i = 0; i < groupAmount; i++) {
+      resultArr[i] = [];
     }
-    // slice students
-    let size = studentAmount;
-    let slicedArray = [];
-    for (let i = 0; i < studentsId.length; i += size) {
-      slicedArray.push(studentsId.slice(i, i + size));
-    }
-console.log(slicedArray);
 
-    return null;
+    for (let i = 0; i < studentsId.length; i += groupAmount) {
+      for (let j = 0; j < groupAmount; j++) {
+        if (!studentsId[j + i]) break;
+        resultArr[j].push(studentsId[j + i]);
+      }
+    }
+
+    for (const item of resultArr) {
+      const data = {
+        id: uuid(),
+        class: classId,
+        students: item,
+        name: null,
+      };
+      const dataCreated = this.groupRepository.create(data);
+      await this.groupRepository.save(dataCreated);
+    }
+    const result = await this.groupRepository.find({
+      where: { class: classId },
+    });
+
+    return result;
   }
 }
