@@ -157,6 +157,9 @@ export class ClassService {
     studentIds: string[],
   ): Promise<Class> {
     const classRoom = await this.classRepository.findOneBy({ id: classId });
+    if (classRoom.students == null) {
+      classRoom.students = [];
+    }
 
     for (const student of studentIds) {
       if (this.checkExistUser(student, classRoom.students)) {
@@ -179,6 +182,9 @@ export class ClassService {
     teachersIds: string[],
   ): Promise<Class> {
     const classRoom = await this.classRepository.findOneBy({ id: classId });
+    if (classRoom.teachers == null) {
+      classRoom.teachers = [];
+    }
 
     for (const teacher of teachersIds) {
       if (this.checkExistUser(teacher, classRoom.teachers)) {
