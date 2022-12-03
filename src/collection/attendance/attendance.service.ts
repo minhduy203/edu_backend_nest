@@ -61,7 +61,8 @@ export class AttendanceService {
         const attendanceInPayload = attendancesInput.Attendance[index];
 
         Attendance.note = attendanceInPayload.note;
-        Attendance.is_present && attendanceInPayload.is_present;
+        attendanceInPayload.is_present !== undefined &&
+          (Attendance.is_present = attendanceInPayload.is_present);
       });
     }
 
@@ -80,13 +81,10 @@ export class AttendanceService {
 
     const formattedToday = dd + '-' + mm + '-' + yyyy;
 
-    console.log('formattedToday', formattedToday);
     const scheduleToDay = await this.ScheduleRepository.findOneBy({
       class_id,
       learn_date: formattedToday,
     });
-
-    console.log('scheduleToDay', scheduleToDay);
 
     if (scheduleToDay) {
       const AttendanceOfClasses = await this.AttendanceRepository.find({
@@ -96,7 +94,7 @@ export class AttendanceService {
       });
       return AttendanceOfClasses;
     } else {
-      throw new Error('Hôm nay không có lịch học');
+      throw new Error('Attendance today not found');
     }
   }
 

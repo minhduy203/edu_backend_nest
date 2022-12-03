@@ -54,7 +54,7 @@ import { Group } from './collection/group/group.entity';
         Assignment,
         ColumnScore,
         Attendance,
-        Group
+        Group,
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({

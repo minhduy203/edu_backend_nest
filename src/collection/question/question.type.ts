@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { TagType } from '../tag/tag.type.';
 import { UserType } from '../user/user.type';
 
 @ObjectType()
@@ -14,6 +15,9 @@ export class QuestionType {
 
   @Field()
   question: string;
+
+  @Field((_type) => [TagType], { nullable: true })
+  tags: string[];
 
   @Field((_type) => [String])
   answers: string[];

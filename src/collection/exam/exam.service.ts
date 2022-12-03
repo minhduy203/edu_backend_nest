@@ -16,17 +16,29 @@ export class ExamService {
     return this.examRepository.find();
   }
 
+  async getMyExam(id): Promise<Exam[]> {
+    return this.examRepository.find({
+      where: {
+        owner_id: id,
+      },
+    });
+  }
+
   async getExamById(id: string): Promise<Exam> {
     return this.examRepository.findOneBy({ id });
   }
 
-  async createExam(createExamInput: CreateExamInput): Promise<Exam> {
+  async createExam(
+    createExamInput: CreateExamInput,
+    owner_id: string,
+  ): Promise<Exam> {
     const { name, tags = null, questions } = createExamInput;
     const data = {
       id: uuid(),
       name,
       tags,
       questions,
+      owner_id,
     };
     const result = this.examRepository.create(data);
     await this.examRepository.save(data);

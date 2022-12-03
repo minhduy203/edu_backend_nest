@@ -82,7 +82,6 @@ export class ClassResolver {
   ) {
     const { sub } = user;
 
-    console.log('sub', sub);
     const classInfo = await this.classService.getClassById(id);
 
     if (classInfo.owner === sub) {

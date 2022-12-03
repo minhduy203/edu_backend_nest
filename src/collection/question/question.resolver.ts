@@ -13,17 +13,25 @@ import { QuestionType } from './question.type';
 import { QuestionService } from './question.service';
 import { CreateQuestionInput, UpdateQuestionInput } from './question.input';
 import { Question } from './question.entity';
+import { TagService } from '../tag/tag.service';
 
 @Resolver((_of) => QuestionType)
 export class QuestionResolver {
   constructor(
     private questionService: QuestionService,
     private userService: UserService,
+    private tagService: TagService,
   ) {}
 
   @Query((_returns) => [QuestionType])
   getAllQuestion() {
     return this.questionService.getAllQuestion();
+  }
+
+  @Query((_returns) => [QuestionType])
+  getMyQuestion(@GetCurrentUser() user: JwtPayload) {
+    const { sub } = user;
+    return this.questionService.getMyQuestion(sub);
   }
 
   @Query((_returns) => QuestionType)
@@ -47,11 +55,6 @@ export class QuestionResolver {
     return this.questionService.updateQuestion(updateQuestionInput, id);
   }
 
-  @Query((_returns) => [QuestionType])
-  getMyQuestions(@Args('id') id: string) {
-    return this.questionService.getMyQuestion(id);
-  }
-
   @Mutation((_returns) => Boolean)
   deleteQuestion(@Args('id') id: string) {
     return this.questionService.deleteQuestion(id);
@@ -60,5 +63,10 @@ export class QuestionResolver {
   @ResolveField()
   async owner(@Parent() question: Question) {
     return this.userService.getUserById(question.owner);
+  }
+
+  @ResolveField()
+  async tags(@Parent() question: Question) {
+    return this.tagService.getManyTags(question.tags);
   }
 }
