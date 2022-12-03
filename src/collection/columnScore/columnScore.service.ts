@@ -31,6 +31,29 @@ export class ColumnScoreService {
     return attendanceOfClasses;
   }
 
+  async addBadge(badge_id: string, student_id: string) {
+    const badge = await this.columnScoreRepository.findOneBy({
+      id: badge_id,
+    });
+
+    ++badge.scores[student_id];
+
+    return this.columnScoreRepository.save(badge);
+  }
+
+  async getBadgeByClass(class_id: string) {
+    const badgeOfClass = await this.columnScoreRepository.find({
+      where: {
+        $or: [
+          { class_id, type: ScoreType.MINUS },
+          { class_id, type: ScoreType.PLUS },
+        ],
+      },
+    } as any);
+
+    return badgeOfClass;
+  }
+
   async createColumnScore(createColumnScoreInput: CreateColumnScoreInput) {
     const { class_id, multiplier, name, type, note, examOfClass_id } =
       createColumnScoreInput;
