@@ -94,7 +94,7 @@ export class AttendanceService {
       });
       return AttendanceOfClasses;
     } else {
-      throw new Error('Hôm nay không có lịch học');
+      throw new Error('Attendance today not found');
     }
   }
 
