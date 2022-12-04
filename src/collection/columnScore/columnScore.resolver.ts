@@ -25,6 +25,15 @@ export class ColumnScoreResolver {
     return columnScores;
   }
 
+  @Query((_returns) => [ColumnScoreType])
+  async getBadgeByClass(@Args('class_id') class_id: string) {
+    const columnScores = await this.columnScoreService.getBadgeByClass(
+      class_id,
+    );
+
+    return columnScores;
+  }
+
   // @Mutation((_returns) => Boolean)
   // async updateAttendances(
   //   @Args('updateAttendancesInput')
