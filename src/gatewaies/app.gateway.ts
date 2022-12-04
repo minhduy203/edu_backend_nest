@@ -62,9 +62,8 @@ export class AppGateway
       listStudent.push(this.onlines[student]);
     });
 
-    console.log('listStudent', listStudent);
-    client
-      .to(data.classId)
+    client.nsp
+      .in(data.classId)
       .emit('receive_students-online-in-class', listStudent);
   }
 
@@ -74,8 +73,18 @@ export class AppGateway
     @ConnectedSocket() client: Socket,
   ) {
     delete this.onlines[client.id];
-    console.log('leave', classId);
-    client.leave(classId);
+    await client.leave(classId);
+
+    const clientsInRoom = this.server.in(classId)?.adapter.rooms;
+
+    const listStudent = [];
+    clientsInRoom.get(classId).forEach((student) => {
+      listStudent.push(this.onlines[student]);
+    });
+
+    client.nsp
+      .in(classId)
+      .emit('receive_students-online-in-class', listStudent);
   }
 
   @SubscribeMessage('add_badge')
