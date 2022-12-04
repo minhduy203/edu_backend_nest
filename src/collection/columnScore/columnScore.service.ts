@@ -44,10 +44,8 @@ export class ColumnScoreService {
   async getBadgeByClass(class_id: string) {
     const badgeOfClass = await this.columnScoreRepository.find({
       where: {
-        $or: [
-          { class_id, type: ScoreType.MINUS },
-          { class_id, type: ScoreType.PLUS },
-        ],
+        class_id,
+        $or: [{ type: ScoreType.MINUS }, { type: ScoreType.PLUS }],
       },
     } as any);
 

@@ -36,6 +36,9 @@ export class UserType {
   @Field({ nullable: true })
   phoneNumber: string;
 
+  @Field({ nullable: true })
+  is_online: boolean;
+
   @Field({ defaultValue: 0 })
   token_version: number;
 

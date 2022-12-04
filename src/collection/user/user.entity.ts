@@ -48,6 +48,9 @@ export class User {
   @Column()
   phoneNumber: string;
 
+  @Column({ default: false })
+  is_online: boolean;
+
   @Column({ default: 0 })
   token_version: number;
 
