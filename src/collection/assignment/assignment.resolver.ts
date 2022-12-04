@@ -31,6 +31,11 @@ export class AssignmentResolver {
     return this.assignmentService.getAllAssignment();
   }
 
+  @Query((_returns) => [AssignmentType])
+  getAllMyAssignment(@GetCurrentUser() user: JwtPayload) {
+    return this.assignmentService.getAllMyAssignment(user.sub);
+  }
+
   @Query((_returns) => AssignmentType)
   getAssignmentById(@Args('id') id: string) {
     return this.assignmentService.getAssignmentById(id);
@@ -38,13 +43,9 @@ export class AssignmentResolver {
 
   @Mutation((_returns) => AssignmentType)
   createAssignment(
-    @GetCurrentUser() user: JwtPayload,
     @Args('createAssignmentInput') createAssignmentInput: CreateAssignmentInput,
   ) {
-    return this.assignmentService.createAssignment(
-      createAssignmentInput,
-      user.sub,
-    );
+    return this.assignmentService.createAssignment(createAssignmentInput);
   }
 
   @Mutation((_returns) => AssignmentType)
@@ -62,11 +63,11 @@ export class AssignmentResolver {
 
   @ResolveField()
   async examClass(@Parent() assignment: Assignment) {
-    return this.examClassService.getExamClassById(assignment.id);
+    return this.examClassService.getExamClassById(assignment.examClass);
   }
 
   @ResolveField()
-  async user(@Parent() assignment: Assignment) {
-    return this.userService.getUserById(assignment.user);
+  async student(@Parent() assignment: Assignment) {
+    return this.userService.getUserById(assignment.student);
   }
 }

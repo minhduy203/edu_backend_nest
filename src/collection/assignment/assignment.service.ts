@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Status } from '../../type';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { ExamClass } from '../exam-class/exam-class.entity';
@@ -29,23 +30,31 @@ export class AssignmentService {
     return this.assignmentRepository.find();
   }
 
+  async getAllMyAssignment(id: string): Promise<Assignment[]> {
+    return this.assignmentRepository.find({
+      where: {
+        student: id,
+      },
+    });
+  }
+
   async getAssignmentById(id: string): Promise<Assignment> {
     return this.assignmentRepository.findOneBy({ id });
   }
 
   async createAssignment(
     createAssignmentInput: CreateAssignmentInput,
-    user: string,
   ): Promise<Assignment> {
-    const { examClass, startTime } = createAssignmentInput;
+    const { examClass, student } = createAssignmentInput;
     const data = {
       id: uuid(),
-      user,
+      student,
       examClass,
-      startTime,
+      startTime: null,
       answerSubmit: null,
       minuteDoing: null,
       score: null,
+      status: Status.DONT_DO,
     };
     const result = this.assignmentRepository.create(data);
     await this.assignmentRepository.insert(data);
@@ -63,12 +72,16 @@ export class AssignmentService {
       id: assignmentId,
     });
     const score = await this.calcScore(answerSubmit, data.examClass);
+    let status: Status = Status.DONT_DO;
+    if (startTime) status = Status.DOING;
+    if (answerSubmit) status = Status.DONE;
 
     data.answerSubmit = answerSubmit || data.answerSubmit;
     data.minuteDoing = minuteDoing || data.minuteDoing;
     data.startTime = startTime || data.startTime;
     data.examClass = examClass || data.examClass;
     data.score = score;
+    data.status = status;
 
     return this.assignmentRepository.save(data);
   }
@@ -93,36 +106,39 @@ export class AssignmentService {
     });
     const exam = await this.examRepository.findOneBy({ id: examClass.exam });
 
-    for (const answer of answerSubmit) {
-      let match = 0;
-      const question = await this.questionRepository.findOneBy({
-        id: answer.questionId,
-      });
-      const correctAnswerArr = [];
-      question.correctAnswer.forEach((item) => {
-        if (item.result) {
-          correctAnswerArr.push(item.text);
-        }
-      });
-      const answersOfQuestion = answer.answer;
+    if (answerSubmit) {
+      for (const answer of answerSubmit) {
+        let match = 0;
+        const question = await this.questionRepository.findOneBy({
+          id: answer.questionId,
+        });
+        const correctAnswerArr = [];
+        question.correctAnswer.forEach((item) => {
+          if (item.result) {
+            correctAnswerArr.push(item.text);
+          }
+        });
+        const answersOfQuestion = answer.answer;
 
-      for (const item of answersOfQuestion) {
-        if (correctAnswerArr.includes(item)) {
-          match++;
+        for (const item of answersOfQuestion) {
+          if (correctAnswerArr.includes(item)) {
+            match++;
+          }
+        }
+
+        if (
+          match === correctAnswerArr.length &&
+          answersOfQuestion.length === correctAnswerArr.length
+        ) {
+          correctNumber++;
         }
       }
+      const result =
+        correctNumber * (examClass.scoreFactor / exam.questions.length);
 
-      if (
-        match === correctAnswerArr.length &&
-        answersOfQuestion.length === correctAnswerArr.length
-      ) {
-        correctNumber++;
-      }
+      return result;
     }
 
-    const result =
-      correctNumber * (examClass.scoreFactor / exam.questions.length);
-
-    return result;
+    return null;
   }
 }

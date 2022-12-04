@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Status } from '../../type';
 import { ExamClassType } from '../exam-class/exam-class.type';
 import { UserType } from '../user/user.type';
 
@@ -14,7 +15,7 @@ export class AssignmentType {
   examClass: string;
 
   @Field((_type) => UserType)
-  user: string;
+  student: string;
 
   @Field()
   startTime: Date;
@@ -28,6 +29,9 @@ export class AssignmentType {
   @Field({ nullable: true })
   minuteDoing: number;
 
+  @Field((_type) => Status, { nullable: true })
+  status: Status;
+
   @Field()
   createdAt: Date;
 
@@ -40,6 +44,6 @@ export class AnswerSubmitType {
   @Field()
   questionId: string;
 
-  @Field((_type) => String)
+  @Field((_type) => [String])
   answer: string[];
 }

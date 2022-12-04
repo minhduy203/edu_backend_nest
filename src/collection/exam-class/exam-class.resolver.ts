@@ -26,6 +26,11 @@ export class ExamClassResolver {
     return this.examClassService.getAllExamClass();
   }
 
+  @Query((_returns) => [ExamClassType])
+  getAllExamOfClass(@Args('classId') classId: string) {
+    return this.examClassService.getAllExamOfClass(classId);
+  }
+
   @Query((_returns) => ExamClassType)
   getExamClassById(@Args('id') id: string) {
     return this.examClassService.getExamClassById(id);

@@ -4,12 +4,15 @@ import { Repository } from 'typeorm';
 import { Exam } from './exam.entity';
 import { CreateExamInput, UpdateExamInput } from './exam.input';
 import { v4 as uuid } from 'uuid';
+import { ExamClass } from '../exam-class/exam-class.entity';
 
 @Injectable()
 export class ExamService {
   constructor(
     @InjectRepository(Exam)
     private examRepository: Repository<Exam>,
+    @InjectRepository(ExamClass)
+    private examClassRepository: Repository<ExamClass>,
   ) {}
 
   async getAllExam(): Promise<Exam[]> {
@@ -61,8 +64,12 @@ export class ExamService {
 
   async deleteExam(id: string): Promise<boolean> {
     const existingExam = await this.examRepository.findOneBy({ id });
+    const examClass = await this.examClassRepository.findOneBy({ exam: id });
     if (!existingExam) {
       return false;
+    }
+    if (examClass) {
+      throw new Error(`This exam related to examClass ${examClass.id}`);
     }
     await this.examRepository.delete({ id });
 

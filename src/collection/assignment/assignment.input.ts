@@ -1,18 +1,12 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateAssignmentInput {
+  @Field((_type) => ID)
+  student: string;
+
   @Field()
   examClass: string;
-
-  @Field()
-  startTime: Date;
-
-  @Field((_type) => [AnswerSubmitInput], { nullable: true })
-  answerSubmit: AnswerSubmitInput[];
-
-  @Field({ nullable: true })
-  minuteDoing: number;
 }
 
 @InputType()

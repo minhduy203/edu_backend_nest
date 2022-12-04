@@ -1,3 +1,4 @@
+import { Status } from '../../type';
 import {
   Column,
   CreateDateColumn,
@@ -20,7 +21,7 @@ export class Assignment {
   examClass: string;
 
   @Column()
-  user: string;
+  student: string;
 
   @Column()
   startTime: Date;
@@ -33,6 +34,13 @@ export class Assignment {
 
   @Column()
   minuteDoing: number;
+
+  @Column({
+    type: 'enum',
+    enum: Status,
+    default: Status.DONT_DO,
+  })
+  status: Status;
 
   @CreateDateColumn()
   createdAt: Date;

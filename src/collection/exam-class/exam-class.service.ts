@@ -19,6 +19,14 @@ export class ExamClassService {
     return this.examClassRepository.find();
   }
 
+  async getAllExamOfClass(classId: string): Promise<ExamClass[]> {
+    return this.examClassRepository.find({
+      where: {
+        classRoom: classId,
+      },
+    });
+  }
+
   async getExamClassById(id: string): Promise<ExamClass> {
     return this.examClassRepository.findOneBy({ id });
   }
