@@ -35,6 +35,11 @@ export class AppGateway
   }
 
   handleDisconnect(client: any) {
+    console.log('Disconnect', {
+      a: client.id,
+      b: this.onlines,
+      c: client.rooms,
+    });
     delete this.onlines[client.id];
     client.emit('disconnected', 'asdsa');
   }
@@ -81,6 +86,7 @@ export class AppGateway
     clientsInRoom.get(classId).forEach((student) => {
       listStudent.push(this.onlines[student]);
     });
+    // client.nsp.in(classId).emit('receive_leave_class');
 
     client.nsp
       .in(classId)
