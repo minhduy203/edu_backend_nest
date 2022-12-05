@@ -3,6 +3,7 @@ import { QuestionType } from '../question/question.type';
 import { ClassType } from '../class/class.type';
 import { TagType } from '../tag/tag.type.';
 import { ExamType } from '../exam/exam.type';
+import { UserType } from '../user/user.type';
 
 @ObjectType()
 export class ExamClassType {
@@ -11,6 +12,9 @@ export class ExamClassType {
 
   @Field()
   id: string;
+
+  @Field((_type) => UserType)
+  owner: string;
 
   @Field((_type) => ExamType)
   exam: string;

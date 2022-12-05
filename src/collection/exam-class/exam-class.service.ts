@@ -27,12 +27,21 @@ export class ExamClassService {
     });
   }
 
+  async getMyExamClass(owner: string): Promise<ExamClass[]> {
+    return this.examClassRepository.find({
+      where: {
+        owner,
+      },
+    });
+  }
+
   async getExamClassById(id: string): Promise<ExamClass> {
     return this.examClassRepository.findOneBy({ id });
   }
 
   async createExamClass(
     createExamClassInput: CreateExamClassInput,
+    owner: string,
   ): Promise<ExamClass> {
     const { exam, classRoom, dateFrom, dateEnd, isAllowReview, minutes } =
       createExamClassInput;
@@ -40,6 +49,7 @@ export class ExamClassService {
     const scoreFactor = classById.scoreFactor;
     const data = {
       id: uuid(),
+      owner,
       exam,
       classRoom,
       dateFrom,
