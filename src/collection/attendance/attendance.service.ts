@@ -98,6 +98,27 @@ export class AttendanceService {
     }
   }
 
+  async getMyHistoryAttendance(user_id: string, class_id: string) {
+    const schedulesInClass = await this.ScheduleRepository.find({
+      where: {
+        class_id,
+      },
+    });
+
+    const schedulesIds = schedulesInClass.map((schedule) => schedule.id);
+
+    const attendances = await this.AttendanceRepository.find({
+      where: {
+        user_id: '0cff3729-b12d-479d-919c-d5ef106e321f',
+        schedule_id: {
+          $in: schedulesIds,
+        } as any,
+      },
+    });
+
+    return attendances;
+  }
+
   // async createAttendance(createAttendanceInput: CreateAttendanceInput) {
   //   const { class_id, content, is_learn_date, learn_date } =
   //     createAttendanceInput;

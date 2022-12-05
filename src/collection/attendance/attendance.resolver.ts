@@ -1,5 +1,16 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { GetCurrentUser } from 'src/common/decorators';
+import { JwtPayload } from 'src/type';
+import { ScheduleService } from '../schedule/schedule.service';
 import { UserService } from '../user/user.service';
+import { Attendance } from './attendance.entity';
 import { AttendanceClassInput } from './attendance.input';
 import { AttendanceService } from './attendance.service';
 import { AttendanceType } from './attendance.type';
@@ -8,6 +19,7 @@ import { AttendanceType } from './attendance.type';
 export class AttendanceResolver {
   constructor(
     private AttendanceService: AttendanceService,
+    private scheduleService: ScheduleService,
     private userService: UserService,
   ) {}
 
@@ -16,6 +28,20 @@ export class AttendanceResolver {
     const Attendances = await this.AttendanceService.getAttendanceToday(
       class_id,
     );
+    return Attendances;
+  }
+
+  @Query((_return) => [AttendanceType])
+  async getMyHistoryAttendance(
+    @GetCurrentUser() user: JwtPayload,
+    @Args('class_id') class_id: string,
+  ) {
+    const { sub } = user;
+    const Attendances = await this.AttendanceService.getMyHistoryAttendance(
+      sub,
+      class_id,
+    );
+
     return Attendances;
   }
 
@@ -30,6 +56,15 @@ export class AttendanceResolver {
       schedule_id,
     );
     return attandances;
+  }
+
+  @ResolveField()
+  async schedule(@Parent() attendance: Attendance) {
+    const schedule = await this.scheduleService.getScheduleById(
+      attendance.schedule_id,
+    );
+    return schedule;
+    // return this.tagService.getManyTags(question.tags);
   }
 
   // @Mutation((_returns) => AttendanceType)
