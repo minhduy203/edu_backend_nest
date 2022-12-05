@@ -19,9 +19,8 @@ export class ScheduleService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async a() {
-    const a = await this.scheduleRepository.find();
-    return a;
+  async getScheduleById(id) {
+    return this.scheduleRepository.findOneBy({ id });
   }
 
   async getScheduleByIdClass(class_id: string) {

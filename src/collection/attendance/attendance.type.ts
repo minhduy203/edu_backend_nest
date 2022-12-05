@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { ScheduleType } from '../schedule/schedule.type';
 
 @ObjectType('Attendance')
 export class AttendanceType {
@@ -10,6 +11,9 @@ export class AttendanceType {
 
   @Field()
   user_id: string;
+
+  @Field((_type) => ScheduleType, { nullable: true })
+  schedule: ScheduleType;
 
   @Field()
   schedule_id: string;

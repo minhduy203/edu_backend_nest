@@ -35,11 +35,6 @@ export class AppGateway
   }
 
   handleDisconnect(client: any) {
-    console.log('Disconnect', {
-      a: client.id,
-      b: this.onlines,
-      c: client.rooms,
-    });
     delete this.onlines[client.id];
     client.emit('disconnected', 'asdsa');
   }
@@ -83,7 +78,7 @@ export class AppGateway
     const clientsInRoom = this.server.in(classId)?.adapter.rooms;
 
     const listStudent = [];
-    clientsInRoom.get(classId).forEach((student) => {
+    clientsInRoom.get(classId)?.forEach((student) => {
       listStudent.push(this.onlines[student]);
     });
     // client.nsp.in(classId).emit('receive_leave_class');
@@ -113,6 +108,7 @@ export class AppGateway
     });
   }
 
+  /** Quick test */
   @SubscribeMessage('add_question')
   async handleAddQuestion(
     @MessageBody() data: { classRoom: string; questionIds: string[] },
@@ -123,5 +119,16 @@ export class AppGateway
     );
 
     client.to(data.classRoom).emit('receive_quick-test', listQuestion);
+  }
+
+  @SubscribeMessage('submit_answer')
+  async handleSubmitAnswer(
+    @MessageBody() data: { classRoom: string; user_id: string; score: number },
+    @ConnectedSocket() client: Socket,
+  ) {
+    client.nsp.in(data.classRoom).emit('receive_answer_submit', {
+      userId: data.user_id,
+      score: data.score,
+    });
   }
 }
