@@ -17,6 +17,9 @@ export class ExamClass {
   id: string;
 
   @Column()
+  owner: string;
+
+  @Column()
   exam: string;
 
   @Column()
