@@ -85,6 +85,7 @@ export class AuthResolver {
       !existingUser ||
       decodedUser.token_version !== existingUser.token_version
     ) {
+      context.res.clearCookie("refreshToken")
       throw new Error('Token invalid');
     }
 

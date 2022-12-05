@@ -85,7 +85,7 @@ export class AuthService {
 
     // const rtMatches = await argon2.verify(user.token_hash, rt);
     // if (!rtMatches) throw new ForbiddenException('Access Denied');
-
+    
     const tokens = await this.getTokens(
       user.id,
       user.email,
