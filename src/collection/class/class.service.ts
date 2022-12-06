@@ -165,11 +165,19 @@ export class ClassService {
       if (this.checkExistUser(student, classRoom.students)) {
         throw new Error(`Class had student ${student}`);
       }
+      console.log('classRoom', classRoom.students);
       classRoom.students.push(student);
     }
 
+   
+
     for (const userId of studentIds) {
       const user = await this.userRepository.findOneBy({ id: userId });
+
+      if (user.classes == null) {
+        user.classes = [];
+      }
+
       user.classes.push(classId);
       this.userRepository.save(user);
     }
