@@ -45,6 +45,14 @@ export class AttendanceResolver {
     return Attendances;
   }
 
+  @Query((_return) => [AttendanceType])
+  async getHistoryAttendanceByClass(@Args('class_id') class_id: string) {
+    const Attendances =
+      await this.AttendanceService.getHistoryAttendanceByClass(class_id);
+
+    return Attendances;
+  }
+
   @Mutation((_returns) => Boolean)
   async updateAttendances(
     @Args('attendanceClassInput')

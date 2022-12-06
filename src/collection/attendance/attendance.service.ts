@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MongoRepository, Repository } from 'typeorm';
+import { v4 as uuid } from 'uuid';
+import { Schedule } from '../schedule/schedule.entity';
 import { User } from '../user/user.entity';
 import { Attendance } from './attendance.entity';
 import { AttendanceClassInput } from './attendance.input';
-import { v4 as uuid } from 'uuid';
-import { Schedule } from '../schedule/schedule.entity';
 
 @Injectable()
 export class AttendanceService {
@@ -15,6 +15,9 @@ export class AttendanceService {
     @InjectRepository(Schedule)
     private ScheduleRepository: Repository<Schedule>,
     @InjectRepository(User) private userRepository: Repository<User>,
+
+    @InjectRepository(Attendance)
+    private attendanceMongoRepo: MongoRepository<Attendance>,
   ) {}
 
   async attendanceClass(
@@ -104,12 +107,37 @@ export class AttendanceService {
         class_id,
       },
     });
-
     const schedulesIds = schedulesInClass.map((schedule) => schedule.id);
 
     const attendances = await this.AttendanceRepository.find({
       where: {
-        user_id: '0cff3729-b12d-479d-919c-d5ef106e321f',
+        user_id,
+        schedule_id: {
+          $in: schedulesIds,
+        } as any,
+      },
+    });
+
+    return attendances;
+  }
+
+  async getHistoryAttendanceByClass(class_id: string) {
+    const schedulesInClass = await this.ScheduleRepository.find({
+      where: {
+        class_id,
+      },
+    });
+
+    const schedulesIds = schedulesInClass.map((schedule) => schedule.id);
+
+    const res = await this.AttendanceRepository.createQueryBuilder(
+      'Attendance',
+    );
+
+    console.log('res', res);
+
+    const attendances = await this.AttendanceRepository.find({
+      where: {
         schedule_id: {
           $in: schedulesIds,
         } as any,
