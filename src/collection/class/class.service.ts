@@ -299,10 +299,9 @@ export class ClassService {
       const classRoom = await this.classRepository.find({
         where: {
           owner: idUser,
-          name: renderName() as any,
-          // end_date: renderStatus() as any,
-          from_date: renderFilterDate('from_date') as any,
-          end_date: renderFilterDate('end_date') as any,
+          ...((name ? { name: renderName() } : {}) as any),
+          ...(from_date ? { from_date: renderFilterDate('from_date') } : {}),
+          ...(end_date ? { end_date: renderFilterDate('end_date') } : {}),
         },
         order: renderSort() as any,
       });
