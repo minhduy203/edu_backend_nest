@@ -184,8 +184,6 @@ export class ClassService {
       classRoom.students.push(student);
     }
 
-   
-
     for (const userId of studentIds) {
       const user = await this.userRepository.findOneBy({ id: userId });
 
@@ -235,13 +233,15 @@ export class ClassService {
     type: TypeFilter,
     idUser: string,
   ) {
-    const { name, sortType, status } = filterClass;
+    const { name, sortType, status, from_date, end_date } = filterClass;
+
     const renderName = () => {
       if (name) {
         return new RegExp(`${name}`);
       }
       return new RegExp(``);
     };
+
     const renderSort = () => {
       if (sortType) {
         if (sortType === ClassSortType.FROM_DATE) {
@@ -259,6 +259,7 @@ export class ClassService {
         };
       }
     };
+
     const renderStatus = () => {
       const now = new Date();
       if (status) {
@@ -278,12 +279,30 @@ export class ClassService {
       }
     };
 
+    const renderFilterDate = (type: string) => {
+      if (type === 'from_date') {
+        if (from_date) {
+          return {
+            $gte: from_date,
+          };
+        }
+      } else if (type === 'end_date') {
+        if (end_date) {
+          return {
+            $lte: end_date,
+          };
+        }
+      }
+    };
+
     if (type === 'TEACHER') {
       const classRoom = await this.classRepository.find({
         where: {
           owner: idUser,
           name: renderName() as any,
-          end_date: renderStatus() as any,
+          // end_date: renderStatus() as any,
+          from_date: renderFilterDate('from_date') as any,
+          end_date: renderFilterDate('end_date') as any,
         },
         order: renderSort() as any,
       });
@@ -301,7 +320,9 @@ export class ClassService {
             $in: user.classes,
           } as any,
           name: renderName() as any,
-          end_date: renderStatus() as any,
+          // end_date: renderStatus() as any,
+          from_date: renderFilterDate('from_date') as any,
+          end_date: renderFilterDate('end_date') as any,
         },
         order: renderSort() as any,
       });

@@ -71,10 +71,21 @@ export class AssignmentService {
     const data = await this.assignmentRepository.findOneBy({
       id: assignmentId,
     });
+    const examClassFound = await this.examClassRepository.findOneBy({
+      id: data.examClass,
+    });
     const score = await this.calcScore(answerSubmit, data.examClass);
     let status: Status = Status.DONT_DO;
     if (startTime) status = Status.DOING;
-    if (answerSubmit) status = Status.DONE;
+    if (answerSubmit) {
+      status = Status.DONE;
+      // add to assignment done
+      if (examClassFound.assignmentDone === null) {
+        examClassFound.assignmentDone = [];
+      }
+      examClassFound.assignmentDone.push(assignmentId);
+      await this.examClassRepository.save(examClassFound);
+    }
 
     data.answerSubmit = answerSubmit || data.answerSubmit;
     data.minuteDoing = minuteDoing || data.minuteDoing;

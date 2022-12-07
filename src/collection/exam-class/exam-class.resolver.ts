@@ -15,6 +15,7 @@ import { CreateExamClassInput, UpdateExamClassInput } from './exam-class.input';
 import { ExamClassService } from './exam-class.service';
 import { ExamClassType } from './exam-class.type';
 import { UserService } from '../user/user.service';
+import { AssignmentService } from '../assignment/assignment.service';
 
 @Resolver((_type) => ExamClassType)
 export class ExamClassResolver {
@@ -82,5 +83,10 @@ export class ExamClassResolver {
   @ResolveField()
   async owner(@Parent() examClass: ExamClass) {
     return this.userService.getUserById(examClass.owner);
+  }
+
+  @ResolveField()
+  async assignmentDone(@Parent() examClass: ExamClass) {
+    return this.examClassService.getManyAssignments(examClass.assignmentDone);
   }
 }

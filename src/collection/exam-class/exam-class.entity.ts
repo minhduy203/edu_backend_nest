@@ -40,6 +40,9 @@ export class ExamClass {
   @Column()
   isAllowReview: boolean;
 
+  @Column()
+  assignmentDone: string[];
+
   @CreateDateColumn()
   createdAt: Date;
 

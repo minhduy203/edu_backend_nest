@@ -4,6 +4,7 @@ import { ClassType } from '../class/class.type';
 import { TagType } from '../tag/tag.type.';
 import { ExamType } from '../exam/exam.type';
 import { UserType } from '../user/user.type';
+import { AssignmentType } from '../assignment/assignment.type';
 
 @ObjectType()
 export class ExamClassType {
@@ -36,6 +37,9 @@ export class ExamClassType {
 
   @Field()
   isAllowReview: boolean;
+
+  @Field((_type) => [AssignmentType], { nullable: true })
+  assignmentDone: string[];
 
   @Field()
   createdAt: Date;

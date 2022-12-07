@@ -104,4 +104,10 @@ export class FilterClassType {
 
   @Field((_type) => ClassStatus, { nullable: true })
   status: ClassStatus;
+
+  @Field({ nullable: true })
+  from_date: Date;
+
+  @Field({ nullable: true })
+  end_date: Date;
 }
