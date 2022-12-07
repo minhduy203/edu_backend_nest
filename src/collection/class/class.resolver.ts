@@ -14,6 +14,7 @@ import {
   AssignUserToClassInput,
   CreateClassInput,
   CreateMyClassInput,
+  FilterClassType,
   UpdateClassInput,
   UpdateMyClassInput,
 } from './class.input';
@@ -33,19 +34,31 @@ export class ClassResolver {
   }
 
   @Query((_returns) => [ClassType])
-  async getMyClass(@GetCurrentUser() user: JwtPayload) {
+  async getMyClass(
+    @Args('fitlerClassType') filterClassType: FilterClassType,
+    @GetCurrentUser() user: JwtPayload,
+  ) {
     const { sub } = user;
 
-    const classes = await this.classService.getClassesByIdTeacher(sub);
+    const classes = await this.classService.getClassesByIdTeacher(
+      filterClassType,
+      sub,
+    );
 
     return classes;
   }
 
   @Query((_returns) => [ClassType])
-  async getMyClassStudent(@GetCurrentUser() user: JwtPayload) {
+  async getMyClassStudent(
+    @Args('fitlerClassType') filterClassType: FilterClassType,
+    @GetCurrentUser() user: JwtPayload,
+  ) {
     const { sub } = user;
 
-    const classes = await this.classService.getClassOfStudent(sub);
+    const classes = await this.classService.getClassOfStudent(
+      filterClassType,
+      sub,
+    );
 
     return classes;
   }

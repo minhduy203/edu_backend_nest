@@ -1,16 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ClassSortType, ClassStatus } from '../../type';
+import {
+  FindManyOptions,
+  FindOperator,
+  LessThan,
+  Like,
+  MoreThan,
+  Repository,
+} from 'typeorm';
+import { format } from 'date-fns';
 import { v4 as uuid } from 'uuid';
 import { User } from '../user/user.entity';
 import { Class } from './class.entity';
 import {
   CreateClassInput,
   CreateMyClassInput,
+  FilterClassType,
   UpdateClassInput,
   UpdateMyClassInput,
 } from './class.input';
 
+export type TypeFilter = 'STUDENT' | 'TEACHER';
 @Injectable()
 export class ClassService {
   constructor(
@@ -25,26 +36,30 @@ export class ClassService {
     return this.classRepository.findOneBy({ id });
   }
 
-  async getClassesByIdTeacher(idTeacher: string): Promise<Class[]> {
-    return this.classRepository.find({
-      where: { owner: idTeacher },
-    });
+  async getClassesByIdTeacher(
+    filterClassType: FilterClassType,
+    idTeacher: string,
+  ): Promise<Class[]> {
+    const classRoom = await this.filterClass(
+      filterClassType,
+      'TEACHER',
+      idTeacher,
+    );
+
+    return classRoom;
   }
 
-  async getClassOfStudent(idStudent: string): Promise<Class[]> {
-    const user = await this.userRepository.findOneBy({
-      id: idStudent,
-    });
+  async getClassOfStudent(
+    filterClassType: FilterClassType,
+    idStudent: string,
+  ): Promise<Class[]> {
+    const classRoom = await this.filterClass(
+      filterClassType,
+      'STUDENT',
+      idStudent,
+    );
 
-    if (user.classes) {
-      return this.classRepository.find({
-        where: {
-          id: {
-            $in: user.classes,
-          } as any,
-        },
-      });
-    }
+    return classRoom;
   }
 
   async createClass(
@@ -213,5 +228,85 @@ export class ClassService {
   checkExistUser<T>(id: T, ids: T[]) {
     if (ids.includes(id)) return true;
     return false;
+  }
+
+  async filterClass(
+    filterClass: FilterClassType,
+    type: TypeFilter,
+    idUser: string,
+  ) {
+    const { name, sortType, status } = filterClass;
+    const renderName = () => {
+      if (name) {
+        return new RegExp(`${name}`);
+      }
+      return new RegExp(``);
+    };
+    const renderSort = () => {
+      if (sortType) {
+        if (sortType === ClassSortType.FROM_DATE) {
+          return {
+            from_date: 'ASC',
+          };
+        } else if (sortType === ClassSortType.END_DATE) {
+          return {
+            end_date: 'ASC',
+          };
+        }
+      } else {
+        return {
+          from_date: 'ASC',
+        };
+      }
+    };
+    const renderStatus = () => {
+      const now = new Date();
+      if (status) {
+        if (status === ClassStatus.AVAILABLE) {
+          return {
+            $gte: now,
+          };
+        } else if (status === ClassStatus.END) {
+          return {
+            $lte: now,
+          };
+        }
+      } else {
+        return {
+          $gte: now,
+        };
+      }
+    };
+
+    if (type === 'TEACHER') {
+      const classRoom = await this.classRepository.find({
+        where: {
+          owner: idUser,
+          name: renderName() as any,
+          end_date: renderStatus() as any,
+        },
+        order: renderSort() as any,
+      });
+
+      return classRoom;
+    }
+
+    if (type === 'STUDENT') {
+      const user = await this.userRepository.findOneBy({
+        id: idUser,
+      });
+      const classRoom = await this.classRepository.find({
+        where: {
+          id: {
+            $in: user.classes,
+          } as any,
+          name: renderName() as any,
+          end_date: renderStatus() as any,
+        },
+        order: renderSort() as any,
+      });
+
+      return classRoom;
+    }
   }
 }

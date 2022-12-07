@@ -1,4 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
+import { ClassSortType, ClassStatus } from '../../type';
 
 @InputType()
 export class CreateClassInput {
@@ -91,4 +92,16 @@ export class CreateMyClassInput {
 
   @Field((_type) => [ID], { nullable: true })
   teachers: string[];
+}
+
+@InputType()
+export class FilterClassType {
+  @Field({ nullable: true })
+  name: string;
+
+  @Field((_type) => ClassSortType, { nullable: true })
+  sortType: ClassSortType;
+
+  @Field((_type) => ClassStatus, { nullable: true })
+  status: ClassStatus;
 }

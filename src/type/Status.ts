@@ -9,3 +9,21 @@ export enum Status {
 registerEnumType(Status, {
   name: 'Status',
 });
+
+export enum ClassStatus {
+  AVAILABLE = 'AVAILABLE',
+  END = 'END',
+}
+
+registerEnumType(ClassStatus, {
+  name: 'ClassStatus',
+});
+
+export enum ClassSortType {
+  FROM_DATE = 'FROM_DATE',
+  END_DATE = 'END_DATE',
+}
+
+registerEnumType(ClassSortType, {
+  name: 'ClassSortType',
+});
