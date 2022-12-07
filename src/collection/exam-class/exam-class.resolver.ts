@@ -37,8 +37,8 @@ export class ExamClassResolver {
   }
 
   @Query((_returns) => [ExamClassType])
-  getAllExamOfClass(@Args('classId') classId: string) {
-    return this.examClassService.getAllExamOfClass(classId);
+  getAllExamClassOfClass(@Args('classId') classId: string) {
+    return this.examClassService.getAllExamClassOfClass(classId);
   }
 
   @Query((_returns) => ExamClassType)

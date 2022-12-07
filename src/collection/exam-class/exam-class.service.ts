@@ -23,7 +23,7 @@ export class ExamClassService {
     return this.examClassRepository.find();
   }
 
-  async getAllExamOfClass(classId: string): Promise<ExamClass[]> {
+  async getAllExamClassOfClass(classId: string): Promise<ExamClass[]> {
     return this.examClassRepository.find({
       where: {
         classRoom: classId,
