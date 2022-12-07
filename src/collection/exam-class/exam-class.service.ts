@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Status } from '../../type';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Class } from '../class/class.entity';
 import { ExamClass } from './exam-class.entity';
 import { CreateExamClassInput, UpdateExamClassInput } from './exam-class.input';
+import { Assignment } from '../assignment/assignment.entity';
 
 @Injectable()
 export class ExamClassService {
@@ -13,6 +15,8 @@ export class ExamClassService {
     private examClassRepository: Repository<ExamClass>,
     @InjectRepository(Class)
     private classRepository: Repository<Class>,
+    @InjectRepository(Assignment)
+    private assignmentRepository: Repository<Assignment>,
   ) {}
 
   async getAllExamClass(): Promise<ExamClass[]> {
@@ -57,9 +61,27 @@ export class ExamClassService {
       isAllowReview,
       minutes,
       scoreFactor,
+      assignmentDone: null,
     };
     const result = this.examClassRepository.create(data);
     await this.examClassRepository.save(data);
+
+    // create assignment
+    for (const student of classById.students) {
+      const dataAssignment = {
+        id: uuid(),
+        student,
+        examClass: data.id,
+        startTime: null,
+        answerSubmit: null,
+        minuteDoing: null,
+        score: null,
+        status: Status.DONT_DO,
+      };
+      // const resultAssign = this.assignmentRepository.create(dataAssignment);
+      await this.assignmentRepository.save(dataAssignment);
+    }
+
     return result;
   }
 
@@ -97,5 +119,20 @@ export class ExamClassService {
     await this.examClassRepository.delete({ id });
 
     return true;
+  }
+
+  async getManyAssignments(assignmentIds: string[]): Promise<Assignment[]> {
+    if (assignmentIds) {
+      const assignmentList = await this.assignmentRepository.find({
+        where: {
+          id: {
+            $in: assignmentIds,
+          } as any,
+        },
+      });
+
+      return assignmentList;
+    }
+    return null;
   }
 }
