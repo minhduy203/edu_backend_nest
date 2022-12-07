@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository, Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { Class } from '../class/class.entity';
 import { Schedule } from '../schedule/schedule.entity';
 import { User } from '../user/user.entity';
 import { Attendance } from './attendance.entity';
@@ -15,9 +16,7 @@ export class AttendanceService {
     @InjectRepository(Schedule)
     private ScheduleRepository: Repository<Schedule>,
     @InjectRepository(User) private userRepository: Repository<User>,
-
-    @InjectRepository(Attendance)
-    private attendanceMongoRepo: MongoRepository<Attendance>,
+    @InjectRepository(Class) private classRespository: Repository<Class>,
   ) {}
 
   async attendanceClass(
@@ -107,6 +106,7 @@ export class AttendanceService {
         class_id,
       },
     });
+
     const schedulesIds = schedulesInClass.map((schedule) => schedule.id);
 
     const attendances = await this.AttendanceRepository.find({
@@ -122,29 +122,38 @@ export class AttendanceService {
   }
 
   async getHistoryAttendanceByClass(class_id: string) {
+    const classData = await this.classRespository.findOneBy({
+      id: class_id,
+    });
+
     const schedulesInClass = await this.ScheduleRepository.find({
       where: {
         class_id,
       },
     });
 
-    const schedulesIds = schedulesInClass.map((schedule) => schedule.id);
+    const students = classData.students;
+    // Get all attendance in class
+    const attendanceOfStudent = await Promise.all(
+      students.map(async (studentId) => {
+        const res = await this.AttendanceRepository.find({
+          where: {
+            user_id: studentId,
+          },
+        });
 
-    const res = await this.AttendanceRepository.createQueryBuilder(
-      'Attendance',
+        // Sort createdAt by asc
+        res.sort((a: any, b: any) => {
+          return a.createdAt - b.createdAt;
+        });
+
+        return res;
+      }),
     );
 
-    console.log('res', res);
+    console.log('attendanceOfStudent', attendanceOfStudent);
 
-    const attendances = await this.AttendanceRepository.find({
-      where: {
-        schedule_id: {
-          $in: schedulesIds,
-        } as any,
-      },
-    });
-
-    return attendances;
+    return attendanceOfStudent;
   }
 
   // async createAttendance(createAttendanceInput: CreateAttendanceInput) {

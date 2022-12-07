@@ -45,12 +45,12 @@ export class AttendanceResolver {
     return Attendances;
   }
 
-  @Query((_return) => [AttendanceType])
+  @Query((_return) => [[AttendanceType]])
   async getHistoryAttendanceByClass(@Args('class_id') class_id: string) {
-    const Attendances =
+    const ListAttendanceOfStudents =
       await this.AttendanceService.getHistoryAttendanceByClass(class_id);
 
-    return Attendances;
+    return ListAttendanceOfStudents;
   }
 
   @Mutation((_returns) => Boolean)

@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Class } from '../class/class.entity';
+import { ClassModule } from '../class/class.module';
 import { Schedule } from '../schedule/schedule.entity';
 import { ScheduleModule } from '../schedule/schedule.module';
 import { User } from '../user/user.entity';
@@ -12,9 +14,10 @@ import { AttendanceService } from './attendance.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Attendance, User, Schedule]),
+    TypeOrmModule.forFeature([Attendance, User, Schedule, Class]),
     UserModule,
     ScheduleModule,
+    ClassModule,
   ],
   providers: [AttendanceResolver, AttendanceService],
   exports: [AttendanceService],
