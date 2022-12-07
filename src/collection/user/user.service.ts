@@ -129,7 +129,7 @@ export class UserService {
     firstName && (user.firstName = firstName);
     lastName && (user.lastName = lastName);
     address && (user.address = address);
-    // avatar && (user.avatar = avatar);
+    avatar && (user.avatar = avatar);
     phoneNumber && (user.phoneNumber = phoneNumber);
 
     if (oldPassword && newPassword) {

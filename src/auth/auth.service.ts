@@ -24,8 +24,8 @@ export class AuthService {
 
   async register(registerInput: RegisterInput): Promise<User> {
     const { email, password, username, role } = registerInput;
-    const firstName = username.split(' ').slice(0, -1).join(' ');
-    const lastName = username.split(' ').slice(-1).join(' ');
+    const lastName = username.split(' ').slice(0, -1).join(' ');
+    const firstName = username.split(' ').slice(-1).join(' ');
 
     if (!email || !password || !username) {
       throw new Error('Require email and password');
