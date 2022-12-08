@@ -1,6 +1,15 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { GetCurrentUser } from 'src/common/decorators';
+import { AssignmentService } from '../assignment/assignment.service';
 import { UserService } from '../user/user.service';
+import { ColumnScore } from './columnScore.entity';
 import {
   CreateColumnScoreInput,
   UpdateColumnScoreInput,
@@ -13,6 +22,7 @@ import { ColumnScoreType } from './columnScore.type.';
 export class ColumnScoreResolver {
   constructor(
     private columnScoreService: ColumnScoreService,
+    private assignmentService: AssignmentService,
     private userService: UserService,
   ) {}
 
@@ -92,5 +102,12 @@ export class ColumnScoreResolver {
     // } else {
     // throw new Error("You don't have permission to delete people's tag");
     // }
+  }
+
+  @ResolveField()
+  async assignments(@Parent() columnScore: ColumnScore) {
+    return this.assignmentService.getScoresAssignmentByExamClass(
+      columnScore.examOfClass_id,
+    );
   }
 }

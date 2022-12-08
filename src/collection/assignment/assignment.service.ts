@@ -12,6 +12,7 @@ import {
   CreateAssignmentInput,
   UpdateAssignmentInput,
 } from './assignment.input';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 @Injectable()
 export class AssignmentService {
@@ -40,6 +41,21 @@ export class AssignmentService {
 
   async getAssignmentById(id: string): Promise<Assignment> {
     return this.assignmentRepository.findOneBy({ id });
+  }
+
+  async getScoresAssignmentByExamClass(exam_id: string): Promise<any> {
+    const res = await this.assignmentRepository.find({
+      where: {
+        examClass: exam_id,
+      },
+    });
+    const result = {};
+
+    res.forEach((assignment) => {
+      result[assignment.student] = assignment.score || 0;
+    });
+
+    return result;
   }
 
   async createAssignment(

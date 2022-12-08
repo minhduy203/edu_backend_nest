@@ -10,7 +10,12 @@ import { AssignmentResolver } from './assignment.resolver';
 import { AssignmentService } from './assignment.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Assignment, Question, Exam, ExamClass]), ExamClassModule, UserModule],
+  imports: [
+    TypeOrmModule.forFeature([Assignment, Question, Exam, ExamClass]),
+    ExamClassModule,
+    UserModule,
+  ],
   providers: [AssignmentService, AssignmentResolver],
+  exports: [AssignmentService],
 })
 export class AssignmentModule {}
