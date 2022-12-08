@@ -32,6 +32,7 @@ export class ExamClassService {
   }
 
   async getMyExamClass(owner: string): Promise<ExamClass[]> {
+    console.log('owner', owner);
     return this.examClassRepository.find({
       where: {
         owner,

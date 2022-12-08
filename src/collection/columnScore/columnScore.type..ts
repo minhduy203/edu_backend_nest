@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { ScoreType } from 'src/type/ScoreType';
 import { GraphQLJSONObject } from 'graphql-type-json';
+import { AssignmentType } from '../assignment/assignment.type';
 
 @ObjectType('ColumnScoreType')
 export class ColumnScoreType {
@@ -21,6 +22,9 @@ export class ColumnScoreType {
 
   @Field((_type) => ScoreType, { nullable: true })
   type: ScoreType;
+
+  @Field((_type) => GraphQLJSONObject, { nullable: true })
+  assignments: object;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
   scores: object;
